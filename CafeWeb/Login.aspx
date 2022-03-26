@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="CafeWeb.WebForm2" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="LoginClass.WebForm2" %>
 
 <!DOCTYPE html lang="tr">
 
@@ -53,7 +53,7 @@
     <script src="assets/js/config.js"></script>
   </head>
 <body>
-    <form id="formAuthentication" runat="server" class="mb-3" method="post">
+    <form id="formAuthentication" runat="server" action="Default.aspx" class="mb-3" method="post">
       <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
@@ -148,8 +148,9 @@
                 </div>
                 <div class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" runat="server" id="rememberMe" name="rememberMe"/>
-                    <label class="form-check-label" for="rememberMe"> Beni Hatırla </label>
+                    <input class="form-check-input" id="Remember" type="checkbox" value="true" name="Remember" />
+                    <input type="hidden" value="false" name="Remember" />
+                    <label  class="form-check-label" for="rememberMe"> Beni Hatırla </label>
                   </div>
                 </div>
                 <div class="mb-3">

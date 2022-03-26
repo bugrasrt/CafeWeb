@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
-using CafeWeb.RouteMapping;
 
 namespace CafeWeb
 {
@@ -14,7 +13,7 @@ namespace CafeWeb
 
         protected void Application_Start(object sender, EventArgs e)
         {
-
+            
         }
 
         protected void Session_Start(object sender, EventArgs e)
@@ -38,7 +37,7 @@ namespace CafeWeb
 
             if (exc != null)
             {
-                Server.Transfer("~/Error/PageNotFound.aspx", true);
+                Server.Transfer("/Error/PageNotFound.aspx", true);
             }
 
             Server.ClearError();

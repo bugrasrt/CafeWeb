@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CafeWeb
+namespace Database
 {
     using System;
     using System.Data.Entity;
@@ -25,6 +25,7 @@ namespace CafeWeb
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Org> Orgs { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CafeWeb.SessionHandle
+namespace WebClasses
 {
     public class MySession
     {
@@ -24,7 +24,7 @@ namespace CafeWeb.SessionHandle
         }
 
         // **** add your session properties here, e.g like this:
-        public string UserId { get; set; }
+        public string OrgFk { get; set; }
         public string UserName { get; set; }
         public string Auth { get; set; }
     }
