@@ -5,4 +5,4 @@
   <li><p>Yetkili Paneli -> Başlanmadı.</p></li>
   <li><p>Personel Paneli -> Başlanmadı.</p></li>
   
-  ![alt text](https://github.com/totor-iot/CafeWeb/Pictures/AdminPaneli1.png?raw=true)
+  ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli1.png?raw=true)
