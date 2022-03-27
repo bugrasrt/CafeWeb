@@ -38,13 +38,6 @@ var app = new Vue({
             document.getElementById(btn1).classList.add('btn-light');
             document.getElementById(btn2).className = 'btn';
             document.getElementById(btn2).classList.add('btn-light');
-        },
-        onFocus: function (typ) {
-            if (document.getElementById(typ).onfocus) {
-                return true;
-            }
-            else { return false; }
-        }
-            
+        }   
     }
 })

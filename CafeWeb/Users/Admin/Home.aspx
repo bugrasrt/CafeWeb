@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <div class=row v-show="showOrg || showPers" class="row" style="gap: 30px; margin-bottom: 10px; justify-content:center; align-content:center;">
+            <div class=row v-show="showOrg || showPers" style="gap: 30px; margin-bottom: 10px; justify-content:center; align-content:center;">
                 <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; del=true;"   type="button" class="btn btn-primary">Kaydet</button>
                 <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; del=false;"  type="button" class="btn btn-light">Düzenle</button>
                 <button id="delBtn"  @focus="focusBtn('delBtn');  del=true;  edit=false; save=false;" type="button" class="btn btn-light">Sil</button>
