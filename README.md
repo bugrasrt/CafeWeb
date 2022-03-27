@@ -1,4 +1,4 @@
-<h2>CafeWeb</h2>
+<h1>CafeWeb</h1>
   <h3>Adisyon Takip</h3>
   <ul>
   <li><p>Admin Paneli -> Hazırlanıyor...</p></li>
