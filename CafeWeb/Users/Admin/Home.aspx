@@ -162,19 +162,37 @@
                 </ul>
             </div>
         </div>
+
+        <div class="sub-menu">
+            <div class="scroll">
+            </div>
+        </div>
+
     </div>
 
-    <main id="app">
-        <div class="container-fluid">
-            <div class="row">
+    <!--MAIN-->
+    <main>
+        <div id="app" class="container-fluid">
+
+            <div class="row" style="text-align:center;">
                 <div class="col-12">
                     <h1>Admin Paneli</h1>
                     <div class="separator mb-5"></div>
-                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="!showCard" style="margin-bottom:30px;" @click="showCard=true">‹</button>
+                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="showOrg || showPers" style="margin-bottom:30px;" @click="showOrg=false; showPers=false;">‹</button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-6 mb-5" v-show="!showCard">
+
+            <div class=row v-show="showOrg || showPers" class="row" style="gap: 30px; margin-bottom: 10px; justify-content:center; align-content:center;">
+                <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; del=true;"   type="button" class="btn btn-primary">Kaydet</button>
+                <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; del=false;"  type="button" class="btn btn-light">Düzenle</button>
+                <button id="delBtn"  @focus="focusBtn('delBtn');  del=true;  edit=false; save=false;" type="button" class="btn btn-light">Sil</button>
+            </div>
+            
+            <!--İşlem Blokları-->
+            <div class="row" style="justify-content:center;"> 
+
+                <!--İşletme Kayıt-->
+                <div class="col-12 col-lg-6 mb-5" v-show="showOrg && save">
                     <h5 class="mb-5">İşletme Kayıt Formu</h5>
 
                     <div class="card mb-4">
@@ -200,13 +218,59 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12 col-xl-8" v-show="showCard">
+
+                <!--İşletme Düzenleme-->
+                <div>
+
+                </div>
+
+                <!--İşletme Silme-->
+                <div>
+
+                </div>
+
+                <!--Personel Kayıt-->
+                <div class="col-12 col-lg-6" v-show="showPers && save">
+                    <h5 class="mb-5">Personel Kayıt Formu</h5>
+                    <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="mb-4">İlgili Bilgiler</h5>
+                                <div id="rulesForm" class="tooltip-label-right">
+                                    <div class="form-group position-relative error-l-50">
+                                        <label>Organizasyon Id</label>
+                                        <input type="text" class="form-control" name="rulesId">
+                                        <small class="form-text text-muted">Sadece 6 adet rakamdan oluşmalıdır!</small>
+                                    </div>
+                                    <div class="form-group position-relative error-l-50">
+                                        <label>Ad</label>
+                                        <input type="text" class="form-control" name="rulesName">
+                                        <small class="form-text text-muted">Sadece karakter içermelidir!</small>
+                                    </div>
+                                    <div class="form-group position-relative error-l-75">
+                                        <label>Şifre</label>
+                                        <input type="text" class="form-control" name="rulesPassword" id="rulesPassword">
+                                        <small class="form-text text-muted">En az 8 karakter olmalıdır!</small>
+                                    </div>
+                                    <div class="form-group position-relative error-l-125">
+                                        <label>Şifre tekrar</label>
+                                        <input type="text" class="form-control" name="rulesPasswordConfirm"
+                                            id="rulesPasswordConfirm">
+                                        <small class="form-text text-muted">Şifreyle aynı olmalıdır!</small>
+                                    </div>
+                                    <button type="button" class="btn btn-primary mb-0">Kaydet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!--Admin İşlem Butonları-->
+                <div class="col-lg-12 col-xl-8" v-show="!showOrg && !showPers">
                     <div class="icon-cards-row">
                         <div class="glide dashboard-numbers">
                             <div class="glide__track" data-glide-el="track">
                                 <ul class="glide__slides">
                                     <li class="glide__slide">
-                                        <a href="#" class="card" @click="showCard=false;">
+                                        <a href="#" class="card" @click="showOrg=true;">
                                             <div class="card-body text-center">
                                                 <i class="simple-icon-home"></i>
                                                 <p class="card-text mb-0">İşletme Yönetimi</p>
@@ -215,7 +279,7 @@
                                         </a>
                                     </li>
                                     <li class="glide__slide">
-                                        <a href="#" class="card">
+                                        <a href="#" class="card" @click="showPers=true;">
                                             <div class="card-body text-center">
                                                 <i class="simple-icon-people"></i>
                                                 <p class="card-text mb-0">Personel Yönetimi</p>
@@ -250,10 +314,12 @@
         </div>
     </main>
 
-    <footer class="page-footer" style="text-align: center;">
-        <p class="mb-0 text-muted">CafeWeb© 2022</p>
+        <footer class="page-footer" style="text-align:center;">
+            <div class="footer-content">
+                <p class="mb-0 text-muted">CafeWeb© 2022</p>
+            </div>
+        </footer>
 
-    </footer>
     </div>
   </form>
 
