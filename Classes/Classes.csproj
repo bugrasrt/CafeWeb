@@ -88,7 +88,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigureApp.cs" />
     <Compile Include="CryptPass.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="UserOrg.cs" />

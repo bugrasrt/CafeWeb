@@ -16,15 +16,15 @@ var app = new Vue({
             dataEl.classList.add('btn-primary');
             switch (typ) {
                 case 'saveBtn':
-                    this.dynamicClass('editBtn', 'delBtn');
+                    this.dynamicClass(['editBtn', 'delBtn']);
                     break;
 
                 case 'editBtn':
-                    this.dynamicClass('saveBtn', 'delBtn');
+                    this.dynamicClass(['saveBtn', 'delBtn']);
                     break;
 
                 case 'delBtn':
-                    this.dynamicClass('editBtn', 'saveBtn');
+                    this.dynamicClass(['editBtn', 'saveBtn']);
                     break;
 
                 default:
@@ -33,11 +33,11 @@ var app = new Vue({
             }
 
         },
-        dynamicClass: function (btn1, btn2) {
-            document.getElementById(btn1).className = 'btn';
-            document.getElementById(btn1).classList.add('btn-light');
-            document.getElementById(btn2).className = 'btn';
-            document.getElementById(btn2).classList.add('btn-light');
+        dynamicClass: function (btnList) {
+            for (let i = 0; i < btnList.length; i++) {
+                document.getElementById(btnList[i]).className = 'btn';
+                document.getElementById(btnList[i]).classList.add('btn-light');
+            }
         }   
     }
 })

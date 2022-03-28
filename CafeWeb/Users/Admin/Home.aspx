@@ -69,7 +69,7 @@
         </div>
 
 
-        <a class="navbar-logo" href="Home.aspx" style="text-align: center;">
+        <a class="navbar-logo" href="<%#: GetRouteUrl("Admin") %>" style="text-align: center;">
             <span class="logo d-none d-xs-block"></span><span style="font-size: large; font-weight: bold; font-family: 'Cookie', cursive;">CafeWeb</span>
             <span class="logo-mobile d-block d-xs-none"></span>
         </a>
@@ -133,9 +133,9 @@
             <div class="user d-inline-block">
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    <span class="name"><%: uname %></span>
+                    <span class="name"><%: userName %></span>
                     <span>
-                        <img alt="Profile Picture" src="../assets/img/profiles/accountLogo.svg" />
+                        <img alt="Profile Picture" src="../Users/assets/img/profiles/accountLogo.svg" />
                     </span>
                 </button>
 
@@ -322,26 +322,26 @@
 
     </div>
   </form>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/chartjs-plugin-datalabels.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/moment.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/datatables.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/perfect-scrollbar.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/progressbar.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/jquery.barrating.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/select2.full.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/nouislider.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/Sortable.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/mousetrap.min.js"></script>
-    <script type="text/javascript" src="../assets/js/vendor/glide.min.js"></script>
-    <script type="text/javascript" src="../assets/js/dore.script.js"></script>
-    <script type="text/javascript" src="../assets/js/scripts.js"></script>
-    <script type="text/javascript" src="../assets/js/main.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/chartjs-plugin-datalabels.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/moment.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/datatables.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/progressbar.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/jquery.barrating.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/select2.full.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/nouislider.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/Sortable.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/mousetrap.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/vendor/glide.min.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/dore.script.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/scripts.js"></script>
+    <script type="text/javascript" src="../Users/assets/js/main.js"></script>
 </body>
 </html>

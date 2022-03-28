@@ -1,37 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using WebClasses;
 
 namespace CafeWebYetkili
 {
     public partial class HomePage : System.Web.UI.Page
     {
-        public string uname, auth, panelName;
+        public string userName;
+        string orgFk, auth;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (MySession.Current.Auth != "2")
-            {
-                Yonlendir();
-            }
+            ControlData();
 
-            if (Request.Cookies["Auth"] != null)
-            {
-                MySession.Current.OrgFk = Request.Cookies["OrgFk"].Value;
-                MySession.Current.UserName = Request.Cookies["UserName"].Value;
-                MySession.Current.Auth = Request.Cookies["Auth"].Value;
-
-                if (MySession.Current.Auth != "2")
-                {
-                    Yonlendir();
-                }
-            }
-
-            uname = MySession.Current.UserName;
-            uname = CryptPass.FirstLetterToUpper(uname);
+            userName = MySession.Current.UserName;
+            userName = CryptPass.FirstLetterToUpper(userName);
         }
 
         protected void SignOut1_ServerClick(object sender, EventArgs e)
@@ -48,18 +30,52 @@ namespace CafeWebYetkili
             PersYon.Visible = false;
         }
 
-        protected void Yonlendir()
+        protected void ControlData()
         {
-            if (MySession.Current.Auth == "1")
+            if (MySession.Current.Auth != null)
             {
-                Response.Redirect("~/Users/Admin/Home.aspx", true);
+                if (MySession.Current.Auth != "2")
+                {
+                    if (MySession.Current.Auth == "1")
+                    {
+                        Response.RedirectToRoute("Admin");
+                    }
+                    else
+                    {
+                        Session.Clear();
+                        Response.Redirect("~/Login.aspx", true);
+                    }
+                }
             }
-            else if (MySession.Current.Auth == "3")
+            else
             {
-                Response.Redirect("~/Users/Personel/Home.aspx", true);
+                if (Request.Cookies["Auth"] != null)
+                {
+                    orgFk = Request.Cookies["OrgFk"].Value;
+                    userName = Request.Cookies["UserName"].Value;
+                    auth = Request.Cookies["Auth"].Value;
+
+                    MySession.SetSession(orgFk, userName, auth);
+
+                    if (MySession.Current.Auth != "2")
+                    {
+                        if (MySession.Current.Auth == "1")
+                        {
+                            Response.RedirectToRoute("Admin");
+                        }
+                        else
+                        {
+                            Session.Clear();
+                            Response.Redirect("~/Login.aspx", true);
+                        }
+                    }
+                }
+                else
+                {
+                    Session.Clear();
+                    Response.Redirect("~/Login.aspx", true);
+                }
             }
-            Session.Clear();
-            Response.Redirect("~/Login.aspx", true);
         }
     }
 }
