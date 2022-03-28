@@ -8,4 +8,3 @@
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/Login.png?raw=true)
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli1.png?raw=true)
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli3.png?raw=true)
-  ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli4.png?raw=true)
