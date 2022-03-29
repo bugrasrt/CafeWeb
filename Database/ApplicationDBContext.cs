@@ -51,5 +51,39 @@ namespace Database
                 }
             }
         }
+
+        public static List<Database.Org> ListOrgs()
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var obj = db.Orgs.Where(a => a.Id > 1000);
+                
+                var orgList = obj.ToList();
+
+                if (orgList == null)
+                {
+                    return null;
+                }
+
+                return orgList;
+            }
+        }
+
+        public static List<Database.User> ListUsers()
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var obj = db.Users.Where(a => a.Auth > 1);
+
+                var orgList = obj.ToList();
+
+                if (orgList == null)
+                {
+                    return null;
+                }
+
+                return orgList;
+            }
+        }
     }
 }

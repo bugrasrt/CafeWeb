@@ -178,11 +178,12 @@
                 <div class="col-12">
                     <h1>Admin Paneli</h1>
                     <div class="separator mb-5"></div>
-                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="showOrg || showPers" style="margin-bottom:30px;" @click="showOrg=false; showPers=false;">‹</button>
+                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="showOrg || showPers" style="margin-bottom:30px;" 
+                        @click="showOrg=false; showPers=false; save=true; edit=false; del=false; focusBtn('saveBtn');">‹</button>
                 </div>
             </div>
 
-            <div class=row v-show="showOrg || showPers" style="gap: 30px; margin-bottom: 10px; justify-content:center; align-content:center;">
+            <div class=row v-show="showOrg || showPers" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
                 <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; del=true;"   type="button" class="btn btn-primary">Kaydet</button>
                 <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; del=false;"  type="button" class="btn btn-light">Düzenle</button>
                 <button id="delBtn"  @focus="focusBtn('delBtn');  del=true;  edit=false; save=false;" type="button" class="btn btn-light">Sil</button>
@@ -194,7 +195,6 @@
                 <!--İşletme Kayıt-->
                 <div class="col-12 col-lg-6 mb-5" v-show="showOrg && save">
                     <h5 class="mb-5">İşletme Kayıt Formu</h5>
-
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="mb-4">İşletme</h5>
@@ -220,8 +220,40 @@
                 </div>
 
                 <!--İşletme Düzenleme-->
-                <div>
-
+                <div v-show="showOrg && edit">
+                    <h5 class="mb-5">İşletme Listesi</h5>
+                    <asp:GridView runat="server" ID="OrgView"
+                        ItemType="Database.Org" DataKeyNames="Id"
+                        SelectMethod="OrgView_GetData" CssClass="styled-table" OnRowDataBound="OrgView_RowDataBound"
+                        AutoGenerateColumns="false" EmptyDataText="There are no data records to display.">
+                        <Columns>
+                            <asp:DynamicField DataField="Id" />
+                            <asp:TemplateField HeaderText="İşletme Adı">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.OrgName.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Aktif mi?">
+                                <ItemTemplate>
+                                <asp:Label Text='<%# Item.isActive == true ? "Evet": "Hayır" %>' 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Oluşturulma Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.CreatedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Değiştirilme Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.ChangedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+                        </Columns>
+                    </asp:GridView>
                 </div>
 
                 <!--İşletme Silme-->
@@ -233,35 +265,78 @@
                 <div class="col-12 col-lg-6" v-show="showPers && save">
                     <h5 class="mb-5">Personel Kayıt Formu</h5>
                     <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="mb-4">İlgili Bilgiler</h5>
-                                <div id="rulesForm" class="tooltip-label-right">
-                                    <div class="form-group position-relative error-l-50">
-                                        <label>Organizasyon Id</label>
-                                        <input type="text" class="form-control" name="rulesId">
-                                        <small class="form-text text-muted">Sadece 6 adet rakamdan oluşmalıdır!</small>
-                                    </div>
-                                    <div class="form-group position-relative error-l-50">
-                                        <label>Ad</label>
-                                        <input type="text" class="form-control" name="rulesName">
-                                        <small class="form-text text-muted">Sadece karakter içermelidir!</small>
-                                    </div>
-                                    <div class="form-group position-relative error-l-75">
-                                        <label>Şifre</label>
-                                        <input type="text" class="form-control" name="rulesPassword" id="rulesPassword">
-                                        <small class="form-text text-muted">En az 8 karakter olmalıdır!</small>
-                                    </div>
-                                    <div class="form-group position-relative error-l-125">
-                                        <label>Şifre tekrar</label>
-                                        <input type="text" class="form-control" name="rulesPasswordConfirm"
-                                            id="rulesPasswordConfirm">
-                                        <small class="form-text text-muted">Şifreyle aynı olmalıdır!</small>
-                                    </div>
-                                    <button type="button" class="btn btn-primary mb-0">Kaydet</button>
+                        <div class="card-body">
+                            <h5 class="mb-4">İlgili Bilgiler</h5>
+                            <div id="rulesForm" class="tooltip-label-right">
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Organizasyon Id</label>
+                                    <input type="text" class="form-control" name="rulesId">
+                                    <small class="form-text text-muted">Sadece 6 adet rakamdan oluşmalıdır!</small>
                                 </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label>Ad</label>
+                                    <input type="text" class="form-control" name="rulesName">
+                                    <small class="form-text text-muted">Sadece karakter içermelidir!</small>
+                                </div>
+                                <div class="form-group position-relative error-l-75">
+                                    <label>Şifre</label>
+                                    <input type="text" class="form-control" name="rulesPassword" id="rulesPassword">
+                                    <small class="form-text text-muted">En az 8 karakter olmalıdır!</small>
+                                </div>
+                                <div class="form-group position-relative error-l-125">
+                                    <label>Şifre tekrar</label>
+                                    <input type="text" class="form-control" name="rulesPasswordConfirm"
+                                        id="rulesPasswordConfirm">
+                                    <small class="form-text text-muted">Şifreyle aynı olmalıdır!</small>
+                                </div>
+                                <button type="button" class="btn btn-primary mb-0">Kaydet</button>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!--Personel Düzenleme-->
+                <div v-show="showPers && edit">
+                    <h5 class="mb-5">Personel Listesi</h5>
+                    <asp:GridView runat="server" ID="UserView"
+                        ItemType="Database.User" DataKeyNames="Id"
+                        SelectMethod="UserView_GetData" CssClass="styled-table" OnRowDataBound="UserView_RowDataBound"
+                        AutoGenerateColumns="false" EmptyDataText="There are no data records to display.">
+                        <Columns>
+                            <asp:DynamicField DataField="Id" />
+                            <asp:TemplateField HeaderText="Kullanıcı Adı">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.UserName.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Yetki">
+                                <ItemTemplate>
+                                <asp:Label ID="authLabel" Text='<%# Item.Auth == 2 ? "Yetkili" : "" %>' 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Oluşturulma Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.CreatedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Değiştirilme Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.ChangedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Organizasyon Id">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.OrgFk.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>        
+                        </Columns>
+                    </asp:GridView>
+                </div>
 
                 <!--Admin İşlem Butonları-->
                 <div class="col-lg-12 col-xl-8" v-show="!showOrg && !showPers">

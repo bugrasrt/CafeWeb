@@ -2,6 +2,8 @@
 using System.Web;
 using WebClasses;
 using Database;
+using System.Linq;
+using System.Web.UI.WebControls;
 
 namespace CafeWebAdmin
 {
@@ -31,6 +33,48 @@ namespace CafeWebAdmin
         protected void SaveOrg_ServerClick(object sender, EventArgs e)
         {
             ApplicationDBContext.SetOrg(orgName.Value.ToString(), isActive.Checked); ;
+        }
+
+        // The return type can be changed to IEnumerable, however to support
+        // paging and sorting, the following parameters must be added:
+        //     int maximumRows
+        //     int startRowIndex
+        //     out int totalRowCount
+        //     string sortByExpression
+        public IQueryable<Database.Org> OrgView_GetData()
+        {
+            return ApplicationDBContext.ListOrgs().AsQueryable();
+        }
+
+        // The return type can be changed to IEnumerable, however to support
+        // paging and sorting, the following parameters must be added:
+        //     int maximumRows
+        //     int startRowIndex
+        //     out int totalRowCount
+        //     string sortByExpression
+        public IQueryable<Database.User> UserView_GetData()
+        {
+            return ApplicationDBContext.ListUsers().AsQueryable();
+        }
+
+        protected void OrgView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            foreach (TableCell tc in e.Row.Cells)
+            {
+                tc.BorderStyle = BorderStyle.None;
+                tc.BorderWidth = 0;
+                tc.BorderColor = System.Drawing.Color.Transparent;
+            }
+        }
+
+        protected void UserView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            foreach (TableCell tc in e.Row.Cells)
+            {
+                tc.BorderStyle = BorderStyle.None;
+                tc.BorderWidth = 0;
+                tc.BorderColor = System.Drawing.Color.Transparent;
+            }
         }
 
         protected void ControlData()
