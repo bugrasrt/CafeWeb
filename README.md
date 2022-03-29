@@ -11,3 +11,4 @@
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli3.png?raw=true)
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli4.png?raw=true)
   ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli5.png?raw=true)
+  ![alt text](https://github.com/totor-iot/CafeWeb/blob/master/Pictures/AdminPaneli6.png?raw=true)
