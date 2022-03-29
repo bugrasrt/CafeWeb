@@ -173,20 +173,19 @@
     <!--MAIN-->
     <main>
         <div id="app" class="container-fluid">
-
+            <div  id="bgBlur" v-if="orgPop || persPop" @click="orgPop=false; persPop=false;"></div>
             <div class="row" style="text-align:center;">
                 <div class="col-12">
                     <h1>Admin Paneli</h1>
                     <div class="separator mb-5"></div>
-                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="showOrg || showPers" style="margin-bottom:30px;" 
-                        @click="showOrg=false; showPers=false; save=true; edit=false; del=false; focusBtn('saveBtn');">‹</button>
+                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="(showOrg || showPers) && (!orgPop || persPop)" style="margin-bottom:30px;" 
+                        @click="showOrg=false; showPers=false; save=true; edit=false; focusBtn('saveBtn');">‹</button>
                 </div>
             </div>
 
             <div class=row v-show="showOrg || showPers" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
-                <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; del=true;"   type="button" class="btn btn-primary">Kaydet</button>
-                <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; del=false;"  type="button" class="btn btn-light">Düzenle</button>
-                <button id="delBtn"  @focus="focusBtn('delBtn');  del=true;  edit=false; save=false;" type="button" class="btn btn-light">Sil</button>
+                <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false;"  type="button" class="btn btn-primary">Kaydet</button>
+                <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false;"  type="button" class="btn btn-light">Düzenle</button>
             </div>
             
             <!--İşlem Blokları-->
@@ -220,7 +219,7 @@
                 </div>
 
                 <!--İşletme Düzenleme-->
-                <div v-show="showOrg && edit">
+                <div v-show="(showOrg && edit) && (!orgPop && !persPop)">
                     <h5 class="mb-5">İşletme Listesi</h5>
                     <asp:GridView runat="server" ID="OrgView"
                         ItemType="Database.Org" DataKeyNames="Id"
@@ -252,14 +251,54 @@
                                     runat="server" />
                                 </ItemTemplate>
                             </asp:TemplateField>  
+                            <asp:TemplateField HeaderText="Güncelle">
+                                <ItemTemplate>
+                                 <div @click="orgPop=true;">
+                                     <a id="updateOrg" href="#" onclick="GetSelectedRow(this);">Güncelle</a>
+                                 </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sil">
+                                <ItemTemplate>
+                                <a href="#">Sil</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
 
-                <!--İşletme Silme-->
-                <div>
-
+                <!--İşletme Güncelleme Popup-->
+                <div id="orgUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showOrg && edit && orgPop">
+                    <button class="closeBtn" @click="orgPop=false" style="float:right;">X</button>
+                    <h5 class="mb-5">İşletme Güncelleme</h5>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-4">İşletme</h5>
+                            <div class="needs-validation tooltip-label-right">
+                                <div class="form-group position-relative error-l-50">
+                                    <label for="orgUpdateId">Id</label>
+                                    <input type="text" runat="server" id="orgUpdateId" name="orgUpdateId" class="form-control"/>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label for="orgUpdateName">Ad</label>
+                                    <input type="text" runat="server" id="orgUpdateName" name="orgUpdateName" class="form-control" required>
+                                    <div class="invalid-tooltip">
+                                        Ad gerekli!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" runat="server" class="custom-control-input" id="orgUpdateActive"
+                                            name="orgUpdateActive">
+                                        <label class="custom-control-label" for="orgUpdateActive">Aktif mi?</label>
+                                    </div>
+                                </div>
+                                <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server">Güncelle</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
 
                 <!--Personel Kayıt-->
                 <div class="col-12 col-lg-6" v-show="showPers && save">
@@ -296,7 +335,7 @@
                 </div>
 
                 <!--Personel Düzenleme-->
-                <div v-show="showPers && edit">
+                <div v-show="(showPers && edit) && (!orgPop && !persPop)">
                     <h5 class="mb-5">Personel Listesi</h5>
                     <asp:GridView runat="server" ID="UserView"
                         ItemType="Database.User" DataKeyNames="Id"
@@ -333,7 +372,17 @@
                                 <asp:Label Text="<%# Item.OrgFk.ToString() %>" 
                                     runat="server" />
                                 </ItemTemplate>
-                            </asp:TemplateField>        
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Güncelle">
+                                <ItemTemplate>
+                                <a href="#">Güncelle</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sil">
+                                <ItemTemplate>
+                                <a href="#">Sil</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
@@ -389,11 +438,11 @@
         </div>
     </main>
 
-        <footer class="page-footer" style="text-align:center;">
+<%--        <footer class="page-footer" style="text-align:center;">
             <div class="footer-content">
                 <p class="mb-0 text-muted">CafeWeb© 2022</p>
             </div>
-        </footer>
+        </footer>--%>
 
     </div>
   </form>

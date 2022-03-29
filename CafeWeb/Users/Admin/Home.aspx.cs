@@ -4,6 +4,7 @@ using WebClasses;
 using Database;
 using System.Linq;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 
 namespace CafeWebAdmin
 {
@@ -76,6 +77,25 @@ namespace CafeWebAdmin
                 tc.BorderColor = System.Drawing.Color.Transparent;
             }
         }
+
+        //protected void UpdateOrg_ServerClick(object sender, EventArgs e)
+        //{
+        //    orgUpdateId.Disabled = true;
+        //}
+
+        //protected void OrgView_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    orgUpdateId.Value = OrgView.SelectedRow.Cells[1].Text;
+        //    orgUpdateId.Disabled = true;
+        //    orgUpdateName.Value = OrgView.SelectedRow.Cells[2].Text;
+        //    orgUpdateActive.Value = OrgView.SelectedRow.Cells[3].Text;
+        //}
+
+        //protected void UpdateOrg_ServerClick(object sender, EventArgs e)
+        //{
+        //    GridViewRow row = ((HtmlAnchor)sender).Parent.Parent as GridViewRow;
+        //    orgUpdateId.Value = row.RowIndex.ToString();
+        //}
 
         protected void ControlData()
         {

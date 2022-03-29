@@ -1,5 +1,17 @@
 "use strict";
 
+function GetSelectedRow(txt) {
+    $(document).ready(function () {
+
+        var gridRow = txt.parentNode.parentNode.parentNode;
+        $('#orgUpdateId').val(gridRow.cells[0].textContent);
+        $('#orgUpdateId').prop('readonly', true);
+        $('#orgUpdateName').val(gridRow.cells[1].textContent);
+        var chkBox = (gridRow.cells[2].textContent == "Evet") ? true : false;
+        $('#orgUpdateActive').prop('checked', chkBox);
+    });
+}
+
 var app = new Vue({
     el: '#app',
     data: {
@@ -7,7 +19,8 @@ var app = new Vue({
         showPers: false,
         save: true,
         edit: false,
-        del: false
+        orgPop: false,
+        persPop: false
     },
     methods: {
         focusBtn: function (typ) {
@@ -16,15 +29,11 @@ var app = new Vue({
             dataEl.classList.add('btn-primary');
             switch (typ) {
                 case 'saveBtn':
-                    this.dynamicClass(['editBtn', 'delBtn']);
+                    this.dynamicClass(['editBtn']);
                     break;
 
                 case 'editBtn':
-                    this.dynamicClass(['saveBtn', 'delBtn']);
-                    break;
-
-                case 'delBtn':
-                    this.dynamicClass(['editBtn', 'saveBtn']);
+                    this.dynamicClass(['saveBtn']);
                     break;
 
                 default:
@@ -38,6 +47,6 @@ var app = new Vue({
                 document.getElementById(btnList[i]).className = 'btn';
                 document.getElementById(btnList[i]).classList.add('btn-light');
             }
-        }   
+        }
     }
 })

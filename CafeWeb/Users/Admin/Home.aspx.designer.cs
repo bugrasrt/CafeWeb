@@ -69,6 +69,42 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.WebControls.GridView OrgView;
 
         /// <summary>
+        /// orgUpdateId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText orgUpdateId;
+
+        /// <summary>
+        /// orgUpdateName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText orgUpdateName;
+
+        /// <summary>
+        /// orgUpdateActive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox orgUpdateActive;
+
+        /// <summary>
+        /// orgUpdateBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton orgUpdateBtn;
+
+        /// <summary>
         /// UserView control.
         /// </summary>
         /// <remarks>
