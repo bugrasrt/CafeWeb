@@ -222,7 +222,7 @@
                 <div v-show="(showOrg && edit) && (!orgPop && !persPop)">
                     <h5 class="mb-5">İşletme Listesi</h5>
                     <asp:GridView runat="server" ID="OrgView"
-                        ItemType="Database.Org" DataKeyNames="Id"
+                        ItemType="Database.Org" DataKeyNames="Id" AllowPaging="true"
                         SelectMethod="OrgView_GetData" CssClass="styled-table" OnRowDataBound="OrgView_RowDataBound"
                         AutoGenerateColumns="false" EmptyDataText="There are no data records to display.">
                         <Columns>
@@ -253,9 +253,9 @@
                             </asp:TemplateField>  
                             <asp:TemplateField HeaderText="Güncelle">
                                 <ItemTemplate>
-                                 <div @click="orgPop=true;">
-                                     <a id="updateOrg" href="#" onclick="GetSelectedRow(this);">Güncelle</a>
-                                 </div>
+                                    <div @click="orgPop=true;">
+                                        <a id="updateOrg" href="#" onclick="GetSelectedRow(this);">Güncelle</a>
+                                    </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Sil">
@@ -293,7 +293,7 @@
                                         <label class="custom-control-label" for="orgUpdateActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server">Güncelle</button>
+                                <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="orgUpdateBtn_ServerClick">Güncelle</button>
                             </div>
                         </div>
                     </div>

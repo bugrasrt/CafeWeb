@@ -52,6 +52,24 @@ namespace Database
             }
         }
 
+        public static void UpdateOrg(string orgId, string orgName, bool isActive)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                
+                var obj = db.Orgs.SingleOrDefault(a => a.Id.ToString() == orgId);
+
+                if (obj != null)
+                {
+                    obj.OrgName = orgName;
+                    obj.isActive = isActive;
+                    DateTime date = DateTime.Now;
+                    obj.ChangedAt = date;
+                    db.SaveChanges();
+                }
+            }
+        }
+
         public static List<Database.Org> ListOrgs()
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
