@@ -33,7 +33,19 @@ namespace CafeWebAdmin
 
         protected void SaveOrg_ServerClick(object sender, EventArgs e)
         {
-            ApplicationDBContext.SetOrg(orgName.Value.ToString(), isActive.Checked); ;
+            var result = ApplicationDBContext.SetOrg(orgName.Value.ToString(), isActive.Checked);
+            if (result == '0')
+            {
+                Response.Write("<script>alert('Kayıt Başarılı');</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Kayıt Başarısız!');</script>");
+            }
+            orgName.Value = "";
+            isActive.Checked = false;
+            OrgView.DataBind();
+            UserView.DataBind();
         }
 
         // The return type can be changed to IEnumerable, however to support
@@ -80,7 +92,15 @@ namespace CafeWebAdmin
 
         protected void orgUpdateBtn_ServerClick(object sender, EventArgs e)
         {
-            ApplicationDBContext.UpdateOrg(orgUpdateId.Value.Trim().ToString(), orgUpdateName.Value.Trim().ToString(), orgUpdateActive.Checked);
+            var result = ApplicationDBContext.UpdateOrg(orgUpdateId.Value.Trim().ToString(), orgUpdateName.Value.Trim().ToString(), orgUpdateActive.Checked);
+            if (result == '0')
+            {
+                Response.Write("<script>alert('Güncelleme Başarılı');</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Güncelleme Başarısız!');</script>");
+            }
             OrgView.DataBind();
             UserView.DataBind();
         }

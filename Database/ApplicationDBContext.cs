@@ -28,7 +28,7 @@ namespace Database
             }
         }
 
-        public static void SetOrg(string orgName, bool isActive)
+        public static char SetOrg(string orgName, bool isActive)
         {
             DateTime strDate;
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -48,11 +48,15 @@ namespace Database
                     orgs.Add(org);
 
                     db.SaveChanges();
+
+                    return '0';
                 }
+
+                return '1';
             }
         }
 
-        public static void UpdateOrg(string orgId, string orgName, bool isActive)
+        public static char UpdateOrg(string orgId, string orgName, bool isActive)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
             {
@@ -66,7 +70,11 @@ namespace Database
                     DateTime date = DateTime.Now;
                     obj.ChangedAt = date;
                     db.SaveChanges();
+
+                    return '0';
                 }
+
+                return '1';
             }
         }
 

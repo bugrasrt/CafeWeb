@@ -162,24 +162,18 @@
                 </ul>
             </div>
         </div>
-
-        <div class="sub-menu">
-            <div class="scroll">
-            </div>
-        </div>
-
     </div>
 
     <!--MAIN-->
     <main>
         <div id="app" class="container-fluid">
             <div  id="bgBlur" v-if="orgPop || persPop" @click="orgPop=false; persPop=false;"></div>
-            <div class="row" style="text-align:center;">
+            <div class="row text-center">
                 <div class="col-12">
                     <h1>Admin Paneli</h1>
                     <div class="separator mb-5"></div>
-                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="(showOrg || showPers) && (!orgPop || persPop)" style="margin-bottom:30px;" 
-                        @click="showOrg=false; showPers=false; save=true; edit=false; focusBtn('saveBtn');">‹</button>
+                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="(showOrg || showPers) && (!orgPop && !persPop)" style="margin-bottom:30px;" 
+                        @click="showOrg=false; showPers=false;">‹</button>
                 </div>
             </div>
 
@@ -196,10 +190,10 @@
                     <h5 class="mb-5">İşletme Kayıt Formu</h5>
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="mb-4">İşletme</h5>
+                            <h5 class="mb-4">İşletme Bilgileri</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <label>Ad</label>
+                                    <label for="orgName">Ad</label>
                                     <input type="text" runat="server" id="orgName" name="orgName" class="form-control" required>
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
@@ -207,12 +201,13 @@
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" runat="server" class="custom-control-input" id="isActive"
-                                            name="isActive">
+                                        <input type="checkbox" runat="server" class="custom-control-input" id="isActive" name="isActive">
                                         <label class="custom-control-label" for="isActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                <button id="SaveOrg" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="SaveOrg_ServerClick">Kaydet</button>
+                                <div @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                    <button id="SaveOrg" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="SaveOrg_ServerClick">Kaydet</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -254,7 +249,7 @@
                             <asp:TemplateField HeaderText="Güncelle">
                                 <ItemTemplate>
                                     <div @click="orgPop=true;">
-                                        <a id="updateOrg" href="#" onclick="GetSelectedRow(this);">Güncelle</a>
+                                        <a id="updateOrg" href="#" onclick="GetOrgRow(this);">Güncelle</a>
                                     </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -276,24 +271,25 @@
                             <h5 class="mb-4">İşletme</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
+                                    <input type="text" id="orgUpdateId" name="orgUpdateId" runat="server" class="form-control"/>
                                     <label for="orgUpdateId">Id</label>
-                                    <input type="text" runat="server" id="orgUpdateId" name="orgUpdateId" class="form-control"/>
                                 </div>
                                 <div class="form-group position-relative error-l-50">
-                                    <label for="orgUpdateName">Ad</label>
-                                    <input type="text" runat="server" id="orgUpdateName" name="orgUpdateName" class="form-control" required>
+                                    <input type="text" id="orgUpdateName" name="orgUpdateName" runat="server" class="form-control" required>
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
                                     </div>
+                                    <label for="orgUpdateName">Ad</label>
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" runat="server" class="custom-control-input" id="orgUpdateActive"
-                                            name="orgUpdateActive">
+                                        <input type="checkbox" id="orgUpdateActive" name="orgUpdateActive" class="custom-control-input" runat="server">
                                         <label class="custom-control-label" for="orgUpdateActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="orgUpdateBtn_ServerClick">Güncelle</button>
+                                <div @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                    <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="orgUpdateBtn_ServerClick">Güncelle</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -388,62 +384,38 @@
                 </div>
 
                 <!--Admin İşlem Butonları-->
-                <div class="col-lg-12 col-xl-8" v-show="!showOrg && !showPers">
-                    <div class="icon-cards-row">
-                        <div class="glide dashboard-numbers">
-                            <div class="glide__track" data-glide-el="track">
-                                <ul class="glide__slides">
-                                    <li class="glide__slide">
-                                        <a href="#" class="card" @click="showOrg=true;">
-                                            <div class="card-body text-center">
-                                                <i class="simple-icon-home"></i>
-                                                <p class="card-text mb-0">İşletme Yönetimi</p>
-                                                <p class="lead text-center">1</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="glide__slide">
-                                        <a href="#" class="card" @click="showPers=true;">
-                                            <div class="card-body text-center">
-                                                <i class="simple-icon-people"></i>
-                                                <p class="card-text mb-0">Personel Yönetimi</p>
-                                                <p class="lead text-center">2</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="glide__slide">
-                                        <a href="#" class="card">
-                                            <div class="card-body text-center">
-                                                <i class="simple-icon-credit-card"></i>
-                                                <p class="card-text mb-0">Bilanço Yönetimi</p>
-                                                <p class="lead text-center">3</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="glide__slide">
-                                        <a href="#" class="card">
-                                            <div class="card-body text-center">
-                                                <i class="simple-icon-basket-loaded"></i>
-                                                <p class="card-text mb-0">Envanter Yönetimi</p>
-                                                <p class="lead text-center">4</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-show="!showOrg && !showPers">
+                    <div class="card col-4" @click="showOrg=true;">
+                        <a href="#">
+                            <i class="simple-icon-home"></i>
+                        </a>
+                        <p class="card-text mb-2">İşletme Yönetimi</p>
+                        <p class="lead">1</p>
+                    </div>
+                    <div class="card col-4" @click="showPers=true;">
+                        <a href="#">
+                            <i class="simple-icon-people"></i>
+                        </a>
+                        <p class="card-text mb-2">Personel Yönetimi</p>
+                        <p class="lead">2</p>
+                    </div>
+                    <div class="card col-4" >
+                        <a href="#">
+                            <i class="simple-icon-credit-card"></i>
+                        </a>
+                        <p class="card-text mb-2">Bilanço Yönetimi</p>
+                        <p class="lead">3</p>
+                    </div>
+                    <div class="card col-4" >
+                        <a href="#">
+                            <i class="simple-icon-basket-loaded"></i>
+                        </a>
+                        <p class="card-text mb-2">Envanter Yönetimi</p>
+                        <p class="lead">4</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-
-<%--        <footer class="page-footer" style="text-align:center;">
-            <div class="footer-content">
-                <p class="mb-0 text-muted">CafeWeb© 2022</p>
-            </div>
-        </footer>--%>
-
+        </main>
     </div>
   </form>
     

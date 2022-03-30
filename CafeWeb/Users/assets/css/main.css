@@ -44,6 +44,42 @@ body.show-spinner::after {
   }
 }
 
+#adminIsl {
+    align-items: center !important;
+    align-self: center;
+    align-content: center !important;
+    justify-content: center !important;
+    justify-items: center !important;
+    justify-self: center;
+    row-gap: 2rem;
+    column-gap: 2rem;
+}
+
+#adminIsl .card {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+#adminIsl .card:hover {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+
+#adminIsl .card:active {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+#adminIsl .card {
+    padding: 1rem;
+}
+
+.form-box a {
+    align-items: center !important;
+    align-self: center;
+    align-content: center !important;
+    justify-content: center !important;
+    justify-items: center !important;
+    justify-self: center;
+}
+
 .styled-table {
     border-collapse: collapse;
     margin: 25px 0;
