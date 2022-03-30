@@ -51,13 +51,13 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox isActive;
 
         /// <summary>
-        /// SaveOrg control.
+        /// saveOrgBtn control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton SaveOrg;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor saveOrgBtn;
 
         /// <summary>
         /// OrgView control.
@@ -102,7 +102,7 @@ namespace CafeWebAdmin
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton orgUpdateBtn;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor orgUpdateBtn;
 
         /// <summary>
         /// UserView control.

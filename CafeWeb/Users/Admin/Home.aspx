@@ -140,11 +140,11 @@
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-right mt-3">
-                    <a class="dropdown-item" href="#">Hesap</a>
+<%--                    <a class="dropdown-item" href="#">Hesap</a>
                     <a class="dropdown-item" href="#">Özellikler</a>
                     <a class="dropdown-item" href="#">Geçmiş</a>
-                    <a class="dropdown-item" href="#">Destek</a>
-                    <a id="SignOut" runat="server" onserverclick="SignOut_ServerClick" class="dropdown-item">Çıkış yap</a>
+                    <a class="dropdown-item" href="#">Destek</a>--%>
+                    <a href="javascript:void(0);" id="SignOut" runat="server" onserverclick="SignOut_ServerClick" class="dropdown-item">Çıkış yap</a>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
             <div class="scroll">
                 <ul class="list-unstyled">
                     <li class="active">
-                        <a href="#">
+                        <a href="javascript:void(0);">
                             <i class="iconsminds-digital-drawing"></i> Ana Sayfa
                         </a>
                     </li>
@@ -205,13 +205,25 @@
                                         <label class="custom-control-label" for="isActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                <div @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                    <button id="SaveOrg" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="SaveOrg_ServerClick">Kaydet</button>
-                                </div>
+                                  <button type="button" class="btn btn-primary mb-0" @click="isPop=true;">Kaydet</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!--Kaydetme Onay Ekranı-->
+                <div class="cd-popup" role="alert" v-if="isPop && !orgPop">
+	                <div class="cd-popup-container">
+		                <p>Kaydetmek istiyor musunuz?</p>
+		                <ul class="cd-buttons">
+			                <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                <a id="saveOrgBtn" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
+			                </li>
+			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
+		                </ul>
+		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
+	                </div> <!-- cd-popup-container -->
+                </div> <!-- cd-popup -->
 
                 <!--İşletme Düzenleme-->
                 <div v-show="(showOrg && edit) && (!orgPop && !persPop)">
@@ -248,14 +260,14 @@
                             </asp:TemplateField>  
                             <asp:TemplateField HeaderText="Güncelle">
                                 <ItemTemplate>
-                                    <div @click="orgPop=true;">
-                                        <a id="updateOrg" href="#" onclick="GetOrgRow(this);">Güncelle</a>
+                                    <div @click="orgPop=true;" role="button">
+                                        <a id="updateOrg" href="javascript:void(0);" onclick="GetOrgRow(this);">Güncelle</a>
                                     </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Sil">
                                 <ItemTemplate>
-                                <a href="#">Sil</a>
+                                <a href="javascript:void(0);">Sil</a>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -287,14 +299,25 @@
                                         <label class="custom-control-label" for="orgUpdateActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                <div @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                    <button id="orgUpdateBtn" type="button" class="btn btn-primary mb-0" runat="server" onserverclick="orgUpdateBtn_ServerClick">Güncelle</button>
-                                </div>
+                                    <button type="button" class="btn btn-primary mb-0" @click="isPop=true">Güncelle</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!--Güncelleme Onay Ekranı-->
+                <div class="cd-popup" role="alert" v-if="isPop && orgPop">
+	                <div class="cd-popup-container">
+		                <p>Güncellemek istiyor musunuz?</p>
+		                <ul class="cd-buttons">
+			                <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                <a id="orgUpdateBtn" href="javascript:void(0);" runat="server" onserverclick="orgUpdateBtn_ServerClick">Evet</a>
+			                </li>
+			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
+		                </ul>
+		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
+	                </div> <!-- cd-popup-container -->
+                </div> <!-- cd-popup -->
 
                 <!--Personel Kayıt-->
                 <div class="col-12 col-lg-6" v-show="showPers && save">
@@ -371,12 +394,12 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Güncelle">
                                 <ItemTemplate>
-                                <a href="#">Güncelle</a>
+                                <a href="javascript:void(0);">Güncelle</a>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Sil">
                                 <ItemTemplate>
-                                <a href="#">Sil</a>
+                                <a href="javascript:void(0);">Sil</a>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -385,35 +408,36 @@
 
                 <!--Admin İşlem Butonları-->
                 <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-show="!showOrg && !showPers">
-                    <div class="card col-4" @click="showOrg=true;">
-                        <a href="#">
+                    <div class="card col-4" role="button" @click="showOrg=true;">
+                        <a>
                             <i class="simple-icon-home"></i>
                         </a>
                         <p class="card-text mb-2">İşletme Yönetimi</p>
                         <p class="lead">1</p>
                     </div>
-                    <div class="card col-4" @click="showPers=true;">
-                        <a href="#">
+                    <div class="card col-4" role="button" @click="showPers=true;">
+                        <a>
                             <i class="simple-icon-people"></i>
                         </a>
                         <p class="card-text mb-2">Personel Yönetimi</p>
                         <p class="lead">2</p>
                     </div>
                     <div class="card col-4" >
-                        <a href="#">
+                        <a href="javascript:void(0);">
                             <i class="simple-icon-credit-card"></i>
                         </a>
                         <p class="card-text mb-2">Bilanço Yönetimi</p>
                         <p class="lead">3</p>
                     </div>
                     <div class="card col-4" >
-                        <a href="#">
+                        <a href="javascript:void(0);">
                             <i class="simple-icon-basket-loaded"></i>
                         </a>
                         <p class="card-text mb-2">Envanter Yönetimi</p>
                         <p class="lead">4</p>
                     </div>
-                </div>
+                 </div>
+               </div>
             </div>
         </main>
     </div>

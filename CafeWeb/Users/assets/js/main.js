@@ -21,7 +21,8 @@ var app = new Vue({
         edit: false,
         orgPop: false,
         persPop: false,
-        isPostBack: false
+        isPostBack: false,
+        isPop: false
     },
     mounted() {
         this.getState();
@@ -75,8 +76,19 @@ var app = new Vue({
                         this.edit = sessionStorage.getItem('edit') == "true" ? true : false;
                     }
 
+                    if (this.edit) {
+                        this.focusBtn('editBtn');
+                    }
+                    else {
+                        this.focusBtn('saveBtn');
+                    }
+
                     this.isPostBack = false;
                     sessionStorage.setItem('isPostBack', this.isPostBack);
+
+                    if (window.history.replaceState) {
+                        window.history.replaceState(null, null, window.location.href);
+                    }
                 }
             }
         }
