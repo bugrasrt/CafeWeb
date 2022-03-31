@@ -133,7 +133,7 @@
             <div class="user d-inline-block">
                 <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
-                    <span class="name"><%: userName %></span>
+                    <span class="name"><%: UserName %></span>
                     <span>
                         <img alt="Profile Picture" src="../Users/assets/img/profiles/accountLogo.svg" />
                     </span>
@@ -170,7 +170,9 @@
             <div  id="bgBlur" v-if="orgPop || persPop" @click="orgPop=false; persPop=false;"></div>
             <div class="row text-center">
                 <div class="col-12">
-                    <h1>Admin Paneli</h1>
+                    <h1 v-if="!showOrg && !showPers">Admin Paneli</h1>
+                    <h1 v-if="showOrg">İşletme İşlemleri </h1>
+                    <h1 v-if="showPers">Personel İşlemleri</h1>
                     <div class="separator mb-5"></div>
                     <button class="w3-button w3-large w3-circle w3-light-grey" v-show="(showOrg || showPers) && (!orgPop && !persPop)" style="margin-bottom:30px;" 
                         @click="showOrg=false; showPers=false;">‹</button>
@@ -194,15 +196,15 @@
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
                                     <label for="orgName">Ad</label>
-                                    <input type="text" runat="server" id="orgName" name="orgName" class="form-control" required>
+                                    <input type="text" runat="server" id="OrgName" name="OrgName" class="form-control" required>
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
                                     </div>
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" runat="server" class="custom-control-input" id="isActive" name="isActive">
-                                        <label class="custom-control-label" for="isActive">Aktif mi?</label>
+                                        <input type="checkbox" runat="server" class="custom-control-input" id="OrgisActive" name="OrgisActive">
+                                        <label class="custom-control-label" for="OrgisActive">Aktif mi?</label>
                                     </div>
                                 </div>
                                   <button type="button" class="btn btn-primary mb-0" @click="isPop=true;">Kaydet</button>
@@ -211,27 +213,13 @@
                     </div>
                 </div>
 
-                <!--Kaydetme Onay Ekranı-->
-                <div class="cd-popup" role="alert" v-if="isPop && !orgPop">
-	                <div class="cd-popup-container">
-		                <p>Kaydetmek istiyor musunuz?</p>
-		                <ul class="cd-buttons">
-			                <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="saveOrgBtn" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
-			                </li>
-			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
-		                </ul>
-		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
-	                </div> <!-- cd-popup-container -->
-                </div> <!-- cd-popup -->
-
                 <!--İşletme Düzenleme-->
                 <div v-show="(showOrg && edit) && (!orgPop && !persPop)">
                     <h5 class="mb-5">İşletme Listesi</h5>
                     <asp:GridView runat="server" ID="OrgView"
                         ItemType="Database.Org" DataKeyNames="Id" AllowPaging="true"
                         SelectMethod="OrgView_GetData" CssClass="styled-table" OnRowDataBound="OrgView_RowDataBound"
-                        AutoGenerateColumns="false" EmptyDataText="There are no data records to display.">
+                        AutoGenerateColumns="false" EmptyDataText="Gösterilecek herhangi bir veri yok.">
                         <Columns>
                             <asp:DynamicField DataField="Id" />
                             <asp:TemplateField HeaderText="İşletme Adı">
@@ -283,11 +271,11 @@
                             <h5 class="mb-4">İşletme</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <input type="text" id="orgUpdateId" name="orgUpdateId" runat="server" class="form-control"/>
+                                    <input type="text" id="OrgUpdateId" name="OrgUpdateId" runat="server" class="form-control"/>
                                     <label for="orgUpdateId">Id</label>
                                 </div>
                                 <div class="form-group position-relative error-l-50">
-                                    <input type="text" id="orgUpdateName" name="orgUpdateName" runat="server" class="form-control" required>
+                                    <input type="text" id="OrgUpdateName" name="OrgUpdateName" runat="server" class="form-control" required>
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
                                     </div>
@@ -295,8 +283,8 @@
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" id="orgUpdateActive" name="orgUpdateActive" class="custom-control-input" runat="server">
-                                        <label class="custom-control-label" for="orgUpdateActive">Aktif mi?</label>
+                                        <input type="checkbox" id="OrgUpdateActive" name="OrgUpdateActive" class="custom-control-input" runat="server">
+                                        <label class="custom-control-label" for="OrgUpdateActive">Aktif mi?</label>
                                     </div>
                                 </div>
                                     <button type="button" class="btn btn-primary mb-0" @click="isPop=true">Güncelle</button>
@@ -304,20 +292,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--Güncelleme Onay Ekranı-->
-                <div class="cd-popup" role="alert" v-if="isPop && orgPop">
-	                <div class="cd-popup-container">
-		                <p>Güncellemek istiyor musunuz?</p>
-		                <ul class="cd-buttons">
-			                <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="orgUpdateBtn" href="javascript:void(0);" runat="server" onserverclick="orgUpdateBtn_ServerClick">Evet</a>
-			                </li>
-			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
-		                </ul>
-		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
-	                </div> <!-- cd-popup-container -->
-                </div> <!-- cd-popup -->
 
                 <!--Personel Kayıt-->
                 <div class="col-12 col-lg-6" v-show="showPers && save">
@@ -327,27 +301,48 @@
                             <h5 class="mb-4">İlgili Bilgiler</h5>
                             <div id="rulesForm" class="tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <label>Organizasyon Id</label>
-                                    <input type="text" class="form-control" name="rulesId">
+                                    <label for="UserOrgId">Organizasyon Id</label>
+                                    <input id="UserOrgId" type="text" runat="server" class="form-control" name="UserOrgId">
                                     <small class="form-text text-muted">Sadece 6 adet rakamdan oluşmalıdır!</small>
                                 </div>
                                 <div class="form-group position-relative error-l-50">
-                                    <label>Ad</label>
-                                    <input type="text" class="form-control" name="rulesName">
+                                    <label for="UserSetName">Ad</label>
+                                    <input id="UserSetName" type="text" runat="server" class="form-control" name="UserSetName">
                                     <small class="form-text text-muted">Sadece karakter içermelidir!</small>
                                 </div>
+                                <div class="form-group position-relative">
+                                    <label for="UserYetki" style="display:block;">Yetkilendirme</label>
+                                    <select id="UserYetki" name="UserYetki" class="selectYetki" runat="server">
+
+                                        <option value=''></option>
+
+                                        <option value='2'>Yetkili</option>
+
+                                        <option selected="selected" value='3'>Personel</option>
+
+                                        </select>
+                                    
+                                    <div class="invalid-tooltip">
+                                        Yetki girişi gerekli!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" runat="server" class="custom-control-input" id="UserisActive" name="UserisActive">
+                                        <label class="custom-control-label" for="UserisActive">Aktif mi?</label>
+                                    </div>
+                                </div>
                                 <div class="form-group position-relative error-l-75">
-                                    <label>Şifre</label>
-                                    <input type="text" class="form-control" name="rulesPassword" id="rulesPassword">
+                                    <label for="UserSetPassword">Şifre</label>
+                                    <input type="password" class="form-control" runat="server" name="UserSetPassword" id="UserSetPassword">
                                     <small class="form-text text-muted">En az 8 karakter olmalıdır!</small>
                                 </div>
                                 <div class="form-group position-relative error-l-125">
-                                    <label>Şifre tekrar</label>
-                                    <input type="text" class="form-control" name="rulesPasswordConfirm"
-                                        id="rulesPasswordConfirm">
+                                    <label for="UserSetPassConfirm">Şifre tekrar</label>
+                                    <input type="password" class="form-control" runat="server" name="UserSetPassConfirm" id="UserSetPassConfirm">
                                     <small class="form-text text-muted">Şifreyle aynı olmalıdır!</small>
                                 </div>
-                                <button type="button" class="btn btn-primary mb-0">Kaydet</button>
+                                <button type="button" class="btn btn-primary mb-0" @click="userFormCheck">Kaydet</button>
                             </div>
                         </div>
                     </div>
@@ -359,7 +354,7 @@
                     <asp:GridView runat="server" ID="UserView"
                         ItemType="Database.User" DataKeyNames="Id"
                         SelectMethod="UserView_GetData" CssClass="styled-table" OnRowDataBound="UserView_RowDataBound"
-                        AutoGenerateColumns="false" EmptyDataText="There are no data records to display.">
+                        AutoGenerateColumns="false" EmptyDataText="Gösterilecek herhangi bir veri yok.">
                         <Columns>
                             <asp:DynamicField DataField="Id" />
                             <asp:TemplateField HeaderText="Kullanıcı Adı">
@@ -370,7 +365,7 @@
                             </asp:TemplateField>   
                             <asp:TemplateField HeaderText="Yetki">
                                 <ItemTemplate>
-                                <asp:Label ID="authLabel" Text='<%# Item.Auth == 2 ? "Yetkili" : "" %>' 
+                                <asp:Label ID="authLabel" Text='<%# Item.Auth == 2 ? "Yetkili" : "Personel" %>' 
                                     runat="server" />
                                 </ItemTemplate>
                             </asp:TemplateField>   
@@ -405,6 +400,27 @@
                         </Columns>
                     </asp:GridView>
                 </div>
+
+                 <!--Onay Popup-->
+                <div class="cd-popup" role="alert" v-if="isPop">
+	                <div class="cd-popup-container">
+		                <p v-if="(showOrg && !orgPop) || (showPers && !persPop)">Kaydetmek istediğinize emin misiniz?</p>
+                        <p v-if="(showOrg && orgPop) || (showPers && persPop)">Güncellemek istiyor musunuz?</p>
+		                <ul class="cd-buttons">
+                            <li v-if="(showOrg && !orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                <a id="SaveOrgBtn" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
+			                </li>
+			                <li v-if="(showOrg && orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                <a id="OrgUpdateBtn" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
+			                </li>
+                            <li v-if="(showPers && !persPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
+                                <a id="SaveUserBtn" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
+			                </li>
+			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
+		                </ul>
+		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
+	                </div> <!-- cd-popup-container -->
+                </div> <!-- cd-popup -->
 
                 <!--Admin İşlem Butonları-->
                 <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-show="!showOrg && !showPers">

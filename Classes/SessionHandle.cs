@@ -24,15 +24,17 @@ namespace WebClasses
         }
 
         // **** add your session properties here, e.g like this:
-        public string OrgFk { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
         public string Auth { get; set; }
+        public string OrgFk { get; set; }
 
-        public static void SetSession(string orgFk, string userName, string auth)
+        public static void SetSession(string UserId, string UserName, string Auth, string OrgFk)
         {
-            Current.OrgFk = orgFk;
-            Current.UserName = userName;
-            Current.Auth = auth;
+            Current.UserId = UserId;
+            Current.UserName = UserName;
+            Current.Auth = Auth;
+            Current.OrgFk = OrgFk;
         }
     }
 }

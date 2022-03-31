@@ -325,3 +325,23 @@ tbody a:active {
 .closeBtn:active {
     opacity: .5;
 }
+
+.selectYetki {
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    width: 250px !important;
+    height: 40px !important;
+    color: black !important;
+    background: #F6F6F5 !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 7px !important;
+}
+
+.selectYetki:focus {
+    position: relative !important;
+    pointer-events: all !important;
+}
+

@@ -4,11 +4,11 @@ function GetOrgRow(row) {
     $(document).ready(function () {
 
         var gridRow = row.parentNode.parentNode.parentNode;
-        $('#orgUpdateId').val(gridRow.cells[0].textContent);
-        $('#orgUpdateId').prop('readonly', true);
-        $('#orgUpdateName').val(gridRow.cells[1].textContent);
+        $('#OrgUpdateId').val(gridRow.cells[0].textContent);
+        $('#OrgUpdateId').prop('readonly', true);
+        $('#OrgUpdateName').val(gridRow.cells[1].textContent);
         var chkBox = (gridRow.cells[2].textContent == "Evet") ? true : false;
-        $('#orgUpdateActive').prop('checked', chkBox);
+        $('#OrgUpdateActive').prop('checked', chkBox);
     });
 }
 
@@ -49,6 +49,36 @@ var app = new Vue({
             for (let i = 0; i < btnList.length; i++) {
                 document.getElementById(btnList[i]).className = 'btn';
                 document.getElementById(btnList[i]).classList.add('btn-light');
+            }
+        },
+        userFormCheck: function () {
+            let orgFk = document.getElementById('UserOrgId');
+            let userName = document.getElementById('UserSetName');
+            let userYetki = document.getElementById('UserYetki');
+            let password = document.getElementById('UserSetPassword');
+            let passConf = document.getElementById('UserSetPassConfirm');
+            let yetki = userYetki.options[userYetki.selectedIndex].value;
+            if (yetki == null || yetki == "") {
+                alert('Yetkilendirme bos gecilemez!');
+                return null;
+                
+            }
+            else {
+                if (orgFk.value == null || orgFk.value == "") {
+                    alert("Isletme Id'si bos birakilamaz!");
+                    return null;
+                }
+                if (userName.value == null || userName.value == "") {
+                    alert('Kullanici adi bos gecilemez!');
+                    return null;
+                }
+                if ((password.value == "" || passConf.value == "") || (password.value != passConf.value)) {
+                    alert('Sifreler bos veya uyumsuz!');
+                    return null;
+                }
+                else {
+                    this.isPop = true;
+                }
             }
         },
         setState: function (showOrg, showPers, save, edit, isPostBack) {

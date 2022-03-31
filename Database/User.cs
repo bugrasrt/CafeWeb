@@ -20,6 +20,7 @@ namespace Database
         public byte Auth { get; set; }
         public System.DateTime CreatedAt { get; set; }
         public System.DateTime ChangedAt { get; set; }
+        public bool isActive { get; set; }
         public int OrgFk { get; set; }
     
         public virtual Org Org { get; set; }

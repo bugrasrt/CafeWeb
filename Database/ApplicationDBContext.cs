@@ -13,9 +13,10 @@ namespace Database
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
             {
-                var obj = db.Users.Where(a => a.UserName.Equals(uN) &&
-                                              a.Password.Equals(hD) &&
-                                              a.OrgFk.Equals(oFk)).FirstOrDefault();
+                var obj = db.Users.Where(a => a.UserName == uN  &&
+                                              a.Password == hD  &&
+                                              a.OrgFk    == oFk &&
+                                              a.isActive == true).FirstOrDefault();
 
                 if (obj == null)
                 {
@@ -72,6 +73,62 @@ namespace Database
                     db.SaveChanges();
 
                     return '0';
+                }
+
+                return '1';
+            }
+        }
+
+        public static bool IsUserActive(string Id)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var obj = db.Users.SingleOrDefault(a => a.Id.ToString() == Id && a.isActive == true);
+
+                if (obj != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+        }
+
+        public static char SaveUser(string OrgId, string UserName, string Password, byte Auth, bool IsActive)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var obj = db.Orgs.SingleOrDefault(a => a.Id.ToString() == OrgId && a.isActive == true);
+
+                if (obj != null)
+                {
+                    if (Int32.TryParse(OrgId, out int OrgFk)) {
+                        var userCheck = db.Users.SingleOrDefault(a => a.UserName == UserName && a.OrgFk == OrgFk);
+                        User user = new User();
+
+                        if (userCheck == null)
+                        {
+                            var HashedPass = CryptPass.ComputeSha256Hash(Password);
+                            user.UserName = UserName;
+                            user.Password = HashedPass;
+                            user.Auth = Auth;
+                            DateTime date = DateTime.Now;
+                            user.CreatedAt = date;
+                            user.ChangedAt = date;
+                            user.isActive = IsActive;
+                            user.OrgFk = OrgFk;
+                            db.Users.Add(user);
+                            db.SaveChanges();
+
+                            return '0';
+                        }
+                            
+                        else
+                        {
+                            return '2';
+                        }
+                    } 
                 }
 
                 return '1';

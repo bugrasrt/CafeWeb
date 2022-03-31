@@ -33,31 +33,22 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.HtmlControls.HtmlAnchor SignOut;
 
         /// <summary>
-        /// orgName control.
+        /// OrgName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText orgName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText OrgName;
 
         /// <summary>
-        /// isActive control.
+        /// OrgisActive control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox isActive;
-
-        /// <summary>
-        /// saveOrgBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor saveOrgBtn;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox OrgisActive;
 
         /// <summary>
         /// OrgView control.
@@ -69,40 +60,85 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.WebControls.GridView OrgView;
 
         /// <summary>
-        /// orgUpdateId control.
+        /// OrgUpdateId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText orgUpdateId;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText OrgUpdateId;
 
         /// <summary>
-        /// orgUpdateName control.
+        /// OrgUpdateName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText orgUpdateName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText OrgUpdateName;
 
         /// <summary>
-        /// orgUpdateActive control.
+        /// OrgUpdateActive control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox orgUpdateActive;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox OrgUpdateActive;
 
         /// <summary>
-        /// orgUpdateBtn control.
+        /// UserOrgId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor orgUpdateBtn;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText UserOrgId;
+
+        /// <summary>
+        /// UserSetName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText UserSetName;
+
+        /// <summary>
+        /// UserYetki control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect UserYetki;
+
+        /// <summary>
+        /// UserisActive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox UserisActive;
+
+        /// <summary>
+        /// UserSetPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword UserSetPassword;
+
+        /// <summary>
+        /// UserSetPassConfirm control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword UserSetPassConfirm;
 
         /// <summary>
         /// UserView control.
@@ -112,5 +148,32 @@ namespace CafeWebAdmin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView UserView;
+
+        /// <summary>
+        /// SaveOrgBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor SaveOrgBtn;
+
+        /// <summary>
+        /// OrgUpdateBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor OrgUpdateBtn;
+
+        /// <summary>
+        /// SaveUserBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor SaveUserBtn;
     }
 }

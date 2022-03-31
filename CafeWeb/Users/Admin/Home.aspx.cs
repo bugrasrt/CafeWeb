@@ -10,30 +10,26 @@ namespace CafeWebAdmin
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
-        public string userName;
-        string orgFk, auth;
+        public string UserName;
+        string OrgFk, Auth, UserId;
+        bool IsActive;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             ControlData();
 
-            userName = MySession.Current.UserName;
-            userName = CryptPass.FirstLetterToUpper(userName);
+            UserName = MySession.Current.UserName;
+            UserName = CryptPass.FirstLetterToUpper(UserName);
         }
 
         protected void SignOut_ServerClick(object sender, EventArgs e)
         {
-            Session.Clear();
-            HttpContext.Current.Response.Cookies.Clear();
-            Response.Cookies["OrgFk"].Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies["Auth"].Expires = DateTime.Now.AddDays(-1);
-            Response.Redirect("~/Login.aspx", true);
+            SignOutFunc();
         }
 
         protected void SaveOrg_ServerClick(object sender, EventArgs e)
         {
-            var result = ApplicationDBContext.SetOrg(orgName.Value.ToString(), isActive.Checked);
+            var result = ApplicationDBContext.SetOrg(OrgName.Value.Trim().ToString(), OrgisActive.Checked);
             if (result == '0')
             {
                 Response.Write("<script>alert('Kayıt Başarılı');</script>");
@@ -42,8 +38,52 @@ namespace CafeWebAdmin
             {
                 Response.Write("<script>alert('Kayıt Başarısız!');</script>");
             }
-            orgName.Value = "";
-            isActive.Checked = false;
+            OrgName.Value = "";
+            OrgisActive.Checked = false;
+            OrgView.DataBind();
+            UserView.DataBind();
+        }
+
+        protected void OrgUpdateBtn_ServerClick(object sender, EventArgs e)
+        {
+            var result = ApplicationDBContext.UpdateOrg(OrgUpdateId.Value.Trim().ToString(), OrgUpdateName.Value.Trim().ToString(), 
+                                                        OrgUpdateActive.Checked);
+            if (result == '0')
+            {
+                Response.Write("<script>alert('Güncelleme Başarılı');</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Güncelleme Başarısız!');</script>");
+            }
+            OrgView.DataBind();
+            UserView.DataBind();
+        }
+
+        protected void SaveUser_ServerClick(object sender, EventArgs e)
+        {
+            var result = ApplicationDBContext.SaveUser(UserOrgId.Value.Trim().ToString(), UserSetName.Value.Trim().ToString(),
+                                                       UserSetPassword.Value.Trim().ToString(), Byte.Parse(UserYetki.Value),
+                                                       UserisActive.Checked);
+
+            if (result == '0')
+            {
+                Response.Write("<script>alert('Kayıt Başarılı');</script>");
+            }
+            else if (result == '1')
+            {
+                Response.Write("<script>alert('Aktif böyle bir işletme yok!');</script>");
+            }
+            else
+            {
+                Response.Write("<script>alert('Bu kullanıcı adında biri zaten kayıtlı');</script>");
+            }
+            UserOrgId.Value = "";
+            UserSetName.Value = "";
+            UserYetki.SelectedIndex = 2;
+            UserisActive.Checked = false;
+            UserSetPassword.Value = "";
+            UserSetPassConfirm.Value = "";
             OrgView.DataBind();
             UserView.DataBind();
         }
@@ -90,24 +130,29 @@ namespace CafeWebAdmin
             }
         }
 
-        protected void orgUpdateBtn_ServerClick(object sender, EventArgs e)
+        protected void SignOutFunc()
         {
-            var result = ApplicationDBContext.UpdateOrg(orgUpdateId.Value.Trim().ToString(), orgUpdateName.Value.Trim().ToString(), orgUpdateActive.Checked);
-            if (result == '0')
+            Session.Clear();
+            HttpContext.Current.Response.Cookies.Clear();
+            try
             {
-                Response.Write("<script>alert('Güncelleme Başarılı');</script>");
+                Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["OrgFk"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["Auth"].Expires = DateTime.Now.AddDays(-1);
             }
-            else
+            catch (Exception ex)
             {
-                Response.Write("<script>alert('Güncelleme Başarısız!');</script>");
+                Response.Write($"<script>alert('{ex}');</script>");
             }
-            OrgView.DataBind();
-            UserView.DataBind();
+            
+            Response.Redirect("~/Login.aspx", true);
         }
 
         protected void ControlData()
         {
-            if (MySession.Current.Auth != null)
+            IsActive = MySession.Current.UserId != null && ApplicationDBContext.IsUserActive(MySession.Current.UserId);
+            if (MySession.Current.Auth != null && IsActive != false)
             {
                 if (MySession.Current.Auth != "1")
                 {
@@ -117,38 +162,44 @@ namespace CafeWebAdmin
                     }
                     else
                     {
-                        Session.Clear();
-                        Response.Redirect("~/Login.aspx", true);
+                        SignOutFunc();
                     }
                 }
             }
             else
             {
-                if (Request.Cookies["Auth"] != null)
+                if (Request.Cookies["UserId"] != null && Request.Cookies["Auth"] != null)
                 {
-                    orgFk = Request.Cookies["OrgFk"].Value;
-                    userName = Request.Cookies["UserName"].Value;
-                    auth = Request.Cookies["Auth"].Value;
+                    UserId = Request.Cookies["UserId"].Value;
+                    OrgFk = Request.Cookies["OrgFk"].Value;
+                    UserName = Request.Cookies["UserName"].Value;
+                    Auth = Request.Cookies["Auth"].Value;
+                    IsActive = ApplicationDBContext.IsUserActive(UserId);
 
-                    MySession.SetSession(orgFk, userName, auth);
-
-                    if (MySession.Current.Auth != "1")
+                    if (IsActive != false)
                     {
-                        if (MySession.Current.Auth == "2")
+                        MySession.SetSession(UserId, UserName, Auth, OrgFk);
+
+                        if (MySession.Current.Auth != "1")
                         {
-                            Response.Redirect("Yetkili");
+                            if (MySession.Current.Auth == "2")
+                            {
+                                Response.Redirect("Yetkili");
+                            }
+                            else
+                            {
+                                SignOutFunc();
+                            }
                         }
-                        else
-                        {
-                            Session.Clear();
-                            Response.Redirect("~/Login.aspx", true);
-                        }
+                    }
+                    else
+                    {
+                        SignOutFunc();
                     }
                 }
                 else
                 {
-                    Session.Clear();
-                    Response.Redirect("~/Login.aspx", true);
+                    SignOutFunc();
                 }
             }
         }

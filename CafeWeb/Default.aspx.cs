@@ -3,20 +3,43 @@ using System.Collections.Specialized;
 using System.Web.UI;
 using WebClasses;
 using Database;
+using System.Web;
 
 namespace CafeWebDefault
 {
     public partial class WebForm4 : System.Web.UI.Page
     {
-        string userName, password, hashedData, isChk, orgFk, auth, result;
+        string UserId, UserName, Password, HashedData, IsChk, OrgFk, Auth, result;
+        bool IsActive;
+        int IntOrgFk;
         protected void Page_Load(object sender, EventArgs e)
         {
             RedirectPage();
         }
 
+        protected void SignOutFunc()
+        {
+            Session.Clear();
+            HttpContext.Current.Response.Cookies.Clear();
+            try
+            {
+                Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["OrgFk"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["Auth"].Expires = DateTime.Now.AddDays(-1);
+            }
+            catch (Exception ex)
+            {
+                Response.Write($"<script>alert('{ex}');</script>");
+            }
+
+            Response.Redirect("~/Login.aspx", true);
+        }
+
         protected string ControlData()
         {
-            if (MySession.Current.Auth != null)
+            IsActive = MySession.Current.UserId != null && ApplicationDBContext.IsUserActive(MySession.Current.UserId);
+            if (MySession.Current.Auth != null && IsActive != false)
             {
                 if (MySession.Current.Auth == "1")
                 {
@@ -30,35 +53,43 @@ namespace CafeWebDefault
                 }
                 else
                 {
-                    Session.Clear();
-                    Response.Redirect("~/Login.aspx", true);
+                    SignOutFunc();
                     return "205 OK";
                 }
             }
             else
             {
-                if (Request.Cookies["Auth"] != null)
+                if (Request.Cookies["UserId"] != null && Request.Cookies["Auth"] != null)
                 {
-                    orgFk = Request.Cookies["OrgFk"].Value;
-                    userName = Request.Cookies["UserName"].Value;
-                    auth = Request.Cookies["Auth"].Value;
+                    UserId = Request.Cookies["UserId"].Value;
+                    OrgFk = Request.Cookies["OrgFk"].Value;
+                    UserName = Request.Cookies["UserName"].Value;
+                    Auth = Request.Cookies["Auth"].Value;
+                    IsActive = ApplicationDBContext.IsUserActive(UserId);
 
-                    MySession.SetSession(orgFk, userName, auth);
+                    if (IsActive != false)
+                    {
+                        MySession.SetSession(UserId, UserName, Auth, OrgFk);
 
-                    if (MySession.Current.Auth == "1")
-                    {
-                        Response.RedirectToRoute("Admin");
-                        return "200 OK";
-                    }
-                    else if (MySession.Current.Auth == "2")
-                    {
-                        Response.RedirectToRoute("Yetkili");
-                        return "200 OK";
+                        if (MySession.Current.Auth == "1")
+                        {
+                            Response.RedirectToRoute("Admin");
+                            return "200 OK";
+                        }
+                        else if (MySession.Current.Auth == "2")
+                        {
+                            Response.RedirectToRoute("Yetkili");
+                            return "200 OK";
+                        }
+                        else
+                        {
+                            SignOutFunc();
+                            return "205 OK";
+                        }
                     }
                     else
                     {
-                        Session.Clear();
-                        Response.Redirect("~/Login.aspx", true);
+                        SignOutFunc();
                         return "205 OK";
                     }
                 }
@@ -77,58 +108,64 @@ namespace CafeWebDefault
                 UserOrg userOrg = new UserOrg();
 
                 if (!string.IsNullOrEmpty(nvc["username"]) &&
-                    !string.IsNullOrEmpty(nvc["password"]))
+                    !string.IsNullOrEmpty(nvc["Password"]))
                 {
-                    userName = nvc["username"];
-                    userName = userName.Trim();
+                    UserName = nvc["username"];
+                    UserName = UserName.Trim();
 
-                    password = nvc["password"];
-                    hashedData = CryptPass.ComputeSha256Hash(password);
+                    Password = nvc["Password"];
+                    HashedData = CryptPass.ComputeSha256Hash(Password);
                 }
 
                 if (nvc["Remember"] != null)
                 {
-                    isChk = nvc["Remember"];
-                    var ChkTuple = userOrg.SplitComma(isChk);
+                    IsChk = nvc["Remember"];
+                    var ChkTuple = userOrg.SplitComma(IsChk);
                     if (ChkTuple == null)
                     {
-                        isChk = "false";
+                        IsChk = "false";
                     }
                     else
                     {
-                        isChk = ChkTuple.Item1;
+                        IsChk = ChkTuple.Item1;
                     }
                 }
                 else
                 {
-                    isChk = "false";
+                    IsChk = "false";
                 }
 
-                var NamesTuple = userOrg.SplitPoint(userName);
+                var NamesTuple = userOrg.SplitPoint(UserName);
 
                 if (NamesTuple == null)
                 {
                     Response.Redirect("~/Login.aspx");
                 }
 
-                userName = NamesTuple.Item2;
-                var orgFk = Int32.Parse(NamesTuple.Item1);
+                UserName = NamesTuple.Item2;
+                var OrgChk = Int32.TryParse(NamesTuple.Item1, out IntOrgFk);
+                if (OrgChk == false)
+                {
+                    Response.Redirect("~/Login.aspx");
+                }
 
-                UserInfo uInfo = ApplicationDBContext.GetData(userName.ToLower(), hashedData, orgFk);
+                UserInfo uInfo = ApplicationDBContext.GetData(UserName.ToLower(), HashedData, IntOrgFk);
 
                 if (uInfo != null)
                 {
-                    MySession.SetSession(orgFk.ToString(), userName, uInfo.auth);
+                    MySession.SetSession(uInfo.id, UserName, uInfo.auth, IntOrgFk.ToString());
 
-                    if (isChk == "true")
+                    if (IsChk == "true")
                     {
-                        Response.Cookies["OrgFk"].Expires = DateTime.Now.AddDays(30);
+                        Response.Cookies["UserId"].Expires = DateTime.Now.AddDays(30);
                         Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(30);
                         Response.Cookies["Auth"].Expires = DateTime.Now.AddDays(30);
+                        Response.Cookies["OrgFk"].Expires = DateTime.Now.AddDays(30);
 
-                        Request.Cookies["OrgFk"].Value = orgFk.ToString();
-                        Request.Cookies["UserName"].Value = userName;
+                        Request.Cookies["UserId"].Value = uInfo.id;
+                        Request.Cookies["UserName"].Value = UserName;
                         Request.Cookies["Auth"].Value = uInfo.auth;
+                        Request.Cookies["OrgFk"].Value = IntOrgFk.ToString();
                     }
 
                     if (MySession.Current.Auth == "1")
@@ -139,11 +176,14 @@ namespace CafeWebDefault
                     {
                         Response.RedirectToRoute("Yetkili");
                     }
+                    else
+                    {
+                        SignOutFunc();
+                    }
                 }
                 else
                 {
-                    Session.Clear();
-                    Response.Redirect("~/Login.aspx", true);
+                    SignOutFunc();
                 }
             }
         }
