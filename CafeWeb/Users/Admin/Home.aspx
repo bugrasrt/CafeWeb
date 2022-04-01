@@ -409,7 +409,7 @@
                 <div class="cd-popup" role="alert" v-if="isPop">
 	                <div class="cd-popup-container">
 		                <p v-if="(showOrg && !orgPop) || (showPers && !persPop)">Kaydetmek istediğinize emin misiniz?</p>
-                        <p v-if="(showOrg && orgPop) || (showPers && persPop)">Güncellemek istiyor musunuz?</p>
+                        <p v-if="(showOrg && orgPop) || (showPers && persPop)">Güncellemek istediğinize emin misiniz?</p>
 		                <ul class="cd-buttons">
                             <li v-if="(showOrg && !orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
                                 <a id="SaveOrgBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
