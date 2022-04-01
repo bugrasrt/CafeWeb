@@ -4,6 +4,7 @@ using WebClasses;
 using Database;
 using System.Linq;
 using System.Web.UI.WebControls;
+using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
 namespace CafeWebAdmin
@@ -32,11 +33,11 @@ namespace CafeWebAdmin
             var result = ApplicationDBContext.SetOrg(OrgName.Value.Trim().ToString(), OrgisActive.Checked);
             if (result == '0')
             {
-                Response.Write("<script>alert('Kayıt Başarılı');</script>");
+                resultEl.InnerText = "0";
             }
             else
             {
-                Response.Write("<script>alert('Kayıt Başarısız!');</script>");
+                resultEl.InnerText = "1:Kayıt Başarısız";
             }
             OrgName.Value = "";
             OrgisActive.Checked = false;
@@ -50,11 +51,11 @@ namespace CafeWebAdmin
                                                         OrgUpdateActive.Checked);
             if (result == '0')
             {
-                Response.Write("<script>alert('Güncelleme Başarılı');</script>");
+                resultEl.InnerText = "0";
             }
             else
             {
-                Response.Write("<script>alert('Güncelleme Başarısız!');</script>");
+                resultEl.InnerText = "1:Güncelleme Başarısız!";
             }
             OrgView.DataBind();
             UserView.DataBind();
@@ -68,15 +69,15 @@ namespace CafeWebAdmin
 
             if (result == '0')
             {
-                Response.Write("<script>alert('Kayıt Başarılı');</script>");
+                resultEl.InnerText = "0";
             }
             else if (result == '1')
             {
-                Response.Write("<script>alert('Aktif böyle bir işletme yok!');</script>");
+                resultEl.InnerText = "1:Böyle bir işletme yok!";
             }
             else
             {
-                Response.Write("<script>alert('Bu kullanıcı adında biri zaten kayıtlı');</script>");
+                resultEl.InnerText = "2:Bu kullanıcı adında biri zaten kayıtlı!";
             }
             UserOrgId.Value = "";
             UserSetName.Value = "";

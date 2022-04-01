@@ -61,15 +61,26 @@ namespace Database
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
             {
-                
-                var obj = db.Orgs.SingleOrDefault(a => a.Id.ToString() == orgId);
 
-                if (obj != null)
+                var org = db.Orgs.SingleOrDefault(a => a.Id.ToString() == orgId);
+
+                var pers = from Users in db.Users where Users.OrgFk.ToString() == orgId select Users;
+
+                if (org != null)
                 {
-                    obj.OrgName = orgName;
-                    obj.isActive = isActive;
                     DateTime date = DateTime.Now;
-                    obj.ChangedAt = date;
+
+                    org.OrgName = orgName;
+                    org.isActive = isActive;
+                    org.ChangedAt = date;
+                    db.SaveChanges();
+
+                    foreach (var user in pers)
+                    {
+                        user.isActive = isActive;
+                        user.ChangedAt = date;
+                    }
+
                     db.SaveChanges();
 
                     return '0';

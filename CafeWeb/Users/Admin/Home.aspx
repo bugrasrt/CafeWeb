@@ -34,6 +34,7 @@
         }
     </style>
 </head>
+
 <body id="app-container" class="menu-default show-spinner">
     <form id="form2" runat="server">
        <div>
@@ -140,10 +141,6 @@
                 </button>
 
                 <div class="dropdown-menu dropdown-menu-right mt-3">
-<%--                    <a class="dropdown-item" href="#">Hesap</a>
-                    <a class="dropdown-item" href="#">Özellikler</a>
-                    <a class="dropdown-item" href="#">Geçmiş</a>
-                    <a class="dropdown-item" href="#">Destek</a>--%>
                     <a href="javascript:void(0);" id="SignOut" runat="server" onserverclick="SignOut_ServerClick" class="dropdown-item">Çıkış yap</a>
                 </div>
             </div>
@@ -187,7 +184,7 @@
             <!--İşlem Blokları-->
             <div class="row" style="justify-content:center;"> 
 
-                <!--İşletme Kayıt-->
+               <!--İşletme Kayıt-->
                 <div class="col-12 col-lg-6 mb-5" v-show="showOrg && save">
                     <h5 class="mb-5">İşletme Kayıt Formu</h5>
                     <div class="card mb-4">
@@ -207,7 +204,7 @@
                                         <label class="custom-control-label" for="OrgisActive">Aktif mi?</label>
                                     </div>
                                 </div>
-                                  <button type="button" class="btn btn-primary mb-0" @click="isPop=true;">Kaydet</button>
+                                    <button type="button" class="btn btn-primary mb-0" @click="isPop=true;">Kaydet</button>
                             </div>
                         </div>
                     </div>
@@ -261,6 +258,7 @@
                         </Columns>
                     </asp:GridView>
                 </div>
+
 
                 <!--İşletme Güncelleme Popup-->
                 <div id="orgUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showOrg && edit && orgPop">
@@ -380,7 +378,13 @@
                                 <asp:Label Text="<%# Item.ChangedAt.ToString() %>" 
                                     runat="server" />
                                 </ItemTemplate>
-                            </asp:TemplateField>   
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Aktif mi?">
+                                <ItemTemplate>
+                                <asp:Label Text='<%# Item.isActive == true ? "Evet": "Hayır" %>' 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:TemplateField HeaderText="Organizasyon Id">
                                 <ItemTemplate>
                                 <asp:Label Text="<%# Item.OrgFk.ToString() %>" 
@@ -408,13 +412,13 @@
                         <p v-if="(showOrg && orgPop) || (showPers && persPop)">Güncellemek istiyor musunuz?</p>
 		                <ul class="cd-buttons">
                             <li v-if="(showOrg && !orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="SaveOrgBtn" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
+                                <a id="SaveOrgBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
 			                </li>
 			                <li v-if="(showOrg && orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="OrgUpdateBtn" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
+                                <a id="OrgUpdateBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
 			                </li>
                             <li v-if="(showPers && !persPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="SaveUserBtn" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
+                                <a id="SaveUserBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
 			                </li>
 			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
 		                </ul>
@@ -455,12 +459,15 @@
                  </div>
                </div>
             </div>
+
+        <p id="resultEl" style="display:none;" runat="server"></p>
         </main>
     </div>
   </form>
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="../Users/assets/js/vendor/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="../Users/assets/js/vendor/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="../Users/assets/js/vendor/chartjs-plugin-datalabels.js"></script>
@@ -479,5 +486,6 @@
     <script type="text/javascript" src="../Users/assets/js/dore.script.js"></script>
     <script type="text/javascript" src="../Users/assets/js/scripts.js"></script>
     <script type="text/javascript" src="../Users/assets/js/main.js"></script>
+
 </body>
 </html>

@@ -13,45 +13,25 @@ function GetOrgRow(row) {
 }
 
 function UpdatePopup() {
-    let resultEl = document.getElementById('resultEl');
-    let result = resultEl.textContent;
-    let resultList = result.split(':');
-
-    if (resultList[0] != '0') {
-        ErrorPopup(resultList[1]);
-    }
-    else {
-        Swal.fire(
-            'Başarılı',
-            'Başarıyla güncellenmiştir.',
-            'success'
-        )
-    }
-    resultEl.innerText = '';
+    Swal.fire(
+        'Güncelleme Başarılı',
+        '',
+        'success'
+    )
 }
 
 function SavePopup() {
-    let resultEl = document.getElementById('resultEl');
-    let result = resultEl.textContent;
-    let resultList = result.split(':');
-
-    if (resultList[0] != '0') {
-        ErrorPopup(resultList[1]);
-    }
-    else {
-        Swal.fire(
-            'Başarılı',
-            'Başarıyla kaydedilmiştir.',
-            'success'
-        )
-    }
-    resultEl.innerText = '';
+    Swal.fire(
+        'Kayıt Başarılı',
+        '',
+        'success'
+    )
 }
 
 function ErrorPopup(message) {
     Swal.fire(
-        'Hata!',
         message,
+        '',
         'error'
     )
 }

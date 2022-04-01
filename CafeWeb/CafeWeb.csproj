@@ -218,6 +218,7 @@
     <Content Include="Users\assets\css\dore.light.yellowgranola.css" />
     <Content Include="Users\assets\css\dore.light.yellowgranola.min.css" />
     <Content Include="Users\assets\css\main.css" />
+    <Content Include="Users\assets\css\sweetalert2.min.css" />
     <Content Include="Users\assets\css\vendor\baguetteBox.min.css" />
     <Content Include="Users\assets\css\vendor\bootstrap-datepicker3.min.css" />
     <Content Include="Users\assets\css\vendor\bootstrap-float-label.min.css" />
