@@ -90,6 +90,7 @@ body.show-spinner::after {
     justify-items: center;
     position: relative;
     width: 90%;
+    top: 100px;
     max-width: 400px;
     margin: 4em auto;
     background: #FFF;
@@ -328,8 +329,14 @@ tbody a:active {
 
 .selectYetki {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
     position: relative !important;
+    justify-content: center !important;
+    align-content: center !important;
+    align-items: center !important;
+    justify-items: center !important;
+    align-self: center !important;
+    justify-self: center !important;
     width: 250px !important;
     height: 40px !important;
     color: black !important;

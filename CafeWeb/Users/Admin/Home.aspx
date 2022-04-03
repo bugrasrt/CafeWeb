@@ -252,7 +252,9 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Sil">
                                 <ItemTemplate>
-                                <a href="javascript:void(0);">Sil</a>
+                                <div @click="isPop=true; del=true;">
+                                    <a href="javascript:void(0);" onclick="GetRowForDel('Org', this);">Sil</a>
+                                </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -261,7 +263,7 @@
 
 
                 <!--İşletme Güncelleme Popup-->
-                <div id="orgUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showOrg && edit && orgPop">
+                <div id="OrgUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showOrg && edit && orgPop">
                     <button class="closeBtn" @click="orgPop=false" style="float:right;">X</button>
                     <h5 class="mb-5">İşletme Güncelleme</h5>
                     <div class="card mb-4">
@@ -393,36 +395,89 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Güncelle">
                                 <ItemTemplate>
-                                <a href="javascript:void(0);">Güncelle</a>
+                                <div @click="persPop=true;" role="button">
+                                     <a id="updatePers" href="javascript:void(0);" onclick="GetPersRow(this);">Güncelle</a>
+                                </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Sil">
                                 <ItemTemplate>
-                                <a href="javascript:void(0);">Sil</a>
+                                <div @click="isPop=true; del=true;">
+                                    <a href="javascript:void(0);" onclick="GetRowForDel('User', this);">Sil</a>
+                                </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
 
+                <!--Personel Güncelleme Popup-->
+                <div id="PersUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showPers && edit && persPop">
+                    <button class="closeBtn" @click="persPop=false" style="float:right;">X</button>
+                    <h5 class="mb-5">Personel Güncelleme</h5>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="mb-4">Personel</h5>
+                            <div class="tooltip-label-right">
+                                <div class="form-group position-relative error-l-50">
+                                    <label for="PersUpdateId">Id</label>
+                                    <input type="text" id="PersUpdateId" name="PersUpdateId" runat="server" class="form-control"/>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label for="PersUpdateOrgId">Organizasyon Id</label>
+                                    <input id="PersUpdateOrgId" type="text" runat="server" class="form-control" name="PersUpdateOrgId">
+                                    <small class="form-text text-muted">Sadece 6 adet rakamdan oluşmalıdır!</small>
+                                </div>
+                                <div class="form-group position-relative error-l-50">
+                                    <label for="PersUpdateName">Ad</label>
+                                    <input id="PersUpdateName" type="text" runat="server" class="form-control" name="PersUpdateName">
+                                    <small class="form-text text-muted">Sadece karakter içermelidir!</small>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label for="PersUpdateYetki" style="display:block;">Yetkilendirme</label>
+                                    <select id="PersUpdateYetki" name="PersUpdateYetki" class="selectYetki" runat="server">
+
+                                        <option value=''></option>
+
+                                        <option value='2'>Yetkili</option>
+
+                                        <option selected="selected" value='3'>Personel</option>
+
+                                        </select>
+                                    
+                                    <div class="invalid-tooltip">
+                                        Yetki girişi gerekli!
+                                    </div>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" runat="server" class="custom-control-input" id="PersUpdateActive" name="PersUpdateActive">
+                                        <label class="custom-control-label" for="PersUpdateActive">Aktif mi?</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary mb-0" @click="persFormCheck">Güncelle</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                  <!--Onay Popup-->
                 <div class="cd-popup" role="alert" v-if="isPop">
 	                <div class="cd-popup-container">
-		                <p v-if="(showOrg && !orgPop) || (showPers && !persPop)">Kaydetmek istediğinize emin misiniz?</p>
-                        <p v-if="(showOrg && orgPop) || (showPers && persPop)">Güncellemek istediğinize emin misiniz?</p>
+		                <p v-if="((showOrg && !orgPop) || (showPers && !persPop)) && !del">Kaydetmek istediğinize emin misiniz?</p>
+                        <p v-if="((showOrg && orgPop) || (showPers && persPop)) && !del">Güncellemek istediğinize emin misiniz?</p>
+                        <p v-if="((!persPop && !orgPop) && (edit && del)) ">Silmek istediğinize emin misiniz?</p>
 		                <ul class="cd-buttons">
-                            <li v-if="(showOrg && !orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="SaveOrgBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
-			                </li>
-			                <li v-if="(showOrg && orgPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="OrgUpdateBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
-			                </li>
-                            <li v-if="(showPers && !persPop)" role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, isPostBack);">
-                                <a id="SaveUserBtn" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
-			                </li>
-			                <li><a href="javascript:void(0);" @click="isPop=false">Hayır</a></li>
+                            <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, del, isPostBack);">
+                                <a id="SaveOrgBtn" v-if="(showOrg && !orgPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
+                                <a id="OrgUpdateBtn" v-if="(showOrg && orgPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
+                                <a id="SaveUserBtn" v-if="(showPers && !persPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
+                                <a id="PersUpdateBtn" v-if="(showPers && persPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="PersUpdateBtn_ServerClick">Evet</a>
+                                <a id="DelBtn" v-if="(!orgPop && !persPop) && (edit && del)" role="button" href="javascript:void(0);" runat="server" onserverclick="DelBtn_ServerClick">Evet</a>
+                            </li>
+			                <li><a href="javascript:void(0);" @click="isPop=false; del=false; clearResultEl();">Hayır</a></li>
 		                </ul>
-		                <a href="javascript:void(0);" @click="isPop=false" class="cd-popup-close img-replace"></a>
+		                <a href="javascript:void(0);" @click="isPop=false; del=false; clearResultEl();" class="cd-popup-close img-replace"></a>
 	                </div> <!-- cd-popup-container -->
                 </div> <!-- cd-popup -->
 
@@ -461,6 +516,7 @@
             </div>
 
         <p id="resultEl" style="display:none;" runat="server"></p>
+        <asp:HiddenField id="aspHidden" runat="server"/>
         </main>
     </div>
   </form>

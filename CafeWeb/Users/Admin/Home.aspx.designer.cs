@@ -150,6 +150,51 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.WebControls.GridView UserView;
 
         /// <summary>
+        /// PersUpdateId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText PersUpdateId;
+
+        /// <summary>
+        /// PersUpdateOrgId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText PersUpdateOrgId;
+
+        /// <summary>
+        /// PersUpdateName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText PersUpdateName;
+
+        /// <summary>
+        /// PersUpdateYetki control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect PersUpdateYetki;
+
+        /// <summary>
+        /// PersUpdateActive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox PersUpdateActive;
+
+        /// <summary>
         /// SaveOrgBtn control.
         /// </summary>
         /// <remarks>
@@ -177,6 +222,24 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.HtmlControls.HtmlAnchor SaveUserBtn;
 
         /// <summary>
+        /// PersUpdateBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor PersUpdateBtn;
+
+        /// <summary>
+        /// DelBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor DelBtn;
+
+        /// <summary>
         /// resultEl control.
         /// </summary>
         /// <remarks>
@@ -184,5 +247,14 @@ namespace CafeWebAdmin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl resultEl;
+
+        /// <summary>
+        /// aspHidden control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField aspHidden;
     }
 }

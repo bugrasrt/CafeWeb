@@ -12,6 +12,27 @@ function GetOrgRow(row) {
     });
 }
 
+function GetRowForDel (type, row) {
+    var gridRow = row.parentNode.parentNode.parentNode;
+    var id = gridRow.cells[0].textContent;
+    sessionStorage.setItem('delId', `${type}:${id}`);
+    document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
+}
+
+function GetPersRow(row) {
+    $(document).ready(function () {
+
+        var gridRow = row.parentNode.parentNode.parentNode;
+        $('#PersUpdateId').val(gridRow.cells[0].textContent);
+        $('#PersUpdateId').prop('readonly', true);
+        $('#PersUpdateOrgId').val(gridRow.cells[6].textContent);
+        $('#PersUpdateName').val(gridRow.cells[1].textContent);
+        $('#PersUpdateYetki').val(gridRow.cells[2].textContent == 'Yetkili' ? "2" : "3");
+        var chkBox = (gridRow.cells[5].textContent == "Evet") ? true : false;
+        $('#PersUpdateActive').prop('checked', chkBox);
+    });
+}
+
 function UpdatePopup() {
     let resultEl = document.getElementById('resultEl');
     let result = resultEl.textContent;
@@ -24,6 +45,24 @@ function UpdatePopup() {
         Swal.fire(
             'Başarılı',
             'Başarıyla güncellenmiştir.',
+            'success'
+        )
+    }
+    resultEl.innerText = '';
+}
+
+function DelPopup() {
+    let resultEl = document.getElementById('resultEl');
+    let result = resultEl.textContent;
+    let resultList = result.split(':');
+
+    if (resultList[0] != '0') {
+        ErrorPopup(resultList[1]);
+    }
+    else {
+        Swal.fire(
+            'Başarılı',
+            'Başarıyla silinmiştir.',
             'success'
         )
     }
@@ -63,6 +102,7 @@ var app = new Vue({
         showPers: false,
         save: true,
         edit: false,
+        del: false,
         orgPop: false,
         persPop: false,
         isPostBack: false,
@@ -95,6 +135,30 @@ var app = new Vue({
                 document.getElementById(btnList[i]).classList.add('btn-light');
             }
         },
+        clearResultEl: function () {
+            document.getElementById('resultEl').innerText = '';
+        },
+        persFormCheck: function () {
+            let orgFk = document.getElementById('PersUpdateOrgId');
+            let persName = document.getElementById('PersUpdateName');
+            let persYetki = document.getElementById('PersUpdateYetki');
+            let yetki = persYetki.options[persYetki.selectedIndex].value;
+            if (yetki == null || yetki == "") {
+                ErrorPopup('Yetkilendirme boş geçilemez!');
+                return null;
+
+            }
+            if (orgFk.value == null || orgFk.value == "") {
+                ErrorPopup("İşletme Id'si boş bırakılamaz!");
+                return null;
+            }
+            if (persName.value == null || persName.value == "") {
+                ErrorPopup("Kullanıcı adı boş geçilemez!");
+                return null;
+            }
+
+            this.isPop = true;
+        },
         userFormCheck: function () {
             let orgFk = document.getElementById('UserOrgId');
             let userName = document.getElementById('UserSetName');
@@ -105,32 +169,30 @@ var app = new Vue({
             if (yetki == null || yetki == "") {
                 ErrorPopup('Yetkilendirme boş geçilemez!');
                 return null;
-                
             }
-            else {
-                if (orgFk.value == null || orgFk.value == "") {
-					ErrorPopup("İşletme Id'si boş bırakılamaz!");
-                    return null;
-                }
-                if (userName.value == null || userName.value == "") {
-					ErrorPopup("Kullanıcı adı boş geçilemez!");
-                    return null;
-                }
-                if ((password.value == "" || passConf.value == "") || (password.value != passConf.value)) {
-                    ErrorPopup("Şifreler boş veya uyumsuz!");
-                    return null;
-                }
-                else {
-                    this.isPop = true;
-                }
+            if (orgFk.value == null || orgFk.value == "") {
+				ErrorPopup("İşletme Id'si boş bırakılamaz!");
+                return null;
             }
+            if (userName.value == null || userName.value == "") {
+				ErrorPopup("Kullanıcı adı boş geçilemez!");
+                return null;
+            }
+            if ((password.value == "" || passConf.value == "") || (password.value != passConf.value)) {
+                ErrorPopup("Şifreler boş veya uyumsuz!");
+                return null;
+            }
+
+            this.isPop = true;
         },
-        setState: function (showOrg, showPers, save, edit, isPostBack) {
+        setState: function (showOrg, showPers, save, edit, del, isPostBack) {
             sessionStorage.setItem('showOrg', showOrg);
             sessionStorage.setItem('showPers', showPers);
             sessionStorage.setItem('save', save);
             sessionStorage.setItem('edit', edit);
+            sessionStorage.setItem('del', del);
             sessionStorage.setItem('isPostBack', isPostBack);
+            
         },
         getState: function () {
             if (sessionStorage.getItem('isPostBack') != null || sessionStorage.getItem('isPostBack') != "") {
@@ -149,14 +211,24 @@ var app = new Vue({
                     if (sessionStorage.getItem('edit') != null || sessionStorage.getItem('edit') != "") {
                         this.edit = sessionStorage.getItem('edit') == "true" ? true : false;
                     }
-
-                    if (this.edit) {
-                        this.focusBtn('editBtn');
-						UpdatePopup();
+                    if (sessionStorage.getItem('del') != null || sessionStorage.getItem('del') != "") {
+                        this.del = sessionStorage.getItem('del') == "true" ? true : false;
                     }
-                    else {
+
+
+                    if (this.save && !this.del) {
                         this.focusBtn('saveBtn');
-						SavePopup();
+                        SavePopup();
+                    }
+                    else if (this.edit && !this.del) {
+                        this.focusBtn('editBtn');
+                        UpdatePopup();
+                    }
+                    else if (this.del) {
+                        document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
+                        this.focusBtn('editBtn');
+                        this.del = false;
+                        DelPopup();
                     }
 
                     this.isPostBack = false;

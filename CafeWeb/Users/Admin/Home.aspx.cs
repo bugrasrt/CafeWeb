@@ -77,7 +77,7 @@ namespace CafeWebAdmin
             }
             else
             {
-                resultEl.InnerText = "2:Bu kullanıcı adında biri zaten kayıtlı!";
+                resultEl.InnerText = "2:Bu işletmede aynı kullanıcı adında biri zaten kayıtlı!";
             }
             UserOrgId.Value = "";
             UserSetName.Value = "";
@@ -85,6 +85,63 @@ namespace CafeWebAdmin
             UserisActive.Checked = false;
             UserSetPassword.Value = "";
             UserSetPassConfirm.Value = "";
+            OrgView.DataBind();
+            UserView.DataBind();
+        }
+
+        protected void PersUpdateBtn_ServerClick(object sender, EventArgs e)
+        {
+            var result = ApplicationDBContext.UpdateUser(PersUpdateOrgId.Value.Trim().ToString(), PersUpdateId.Value.Trim().ToString(),
+                                                       PersUpdateName.Value.Trim().ToString(), Byte.Parse(PersUpdateYetki.Value),
+                                                       PersUpdateActive.Checked);
+
+            if (result == '0')
+            {
+                resultEl.InnerText = "0";
+            }
+            else if (result == '1')
+            {
+                resultEl.InnerText = "1:Böyle bir işletme yok!";
+            }
+            else
+            {
+                resultEl.InnerText = "2:Bu işletmede aynı kullanıcı adında biri zaten kayıtlı!";
+            }
+            OrgView.DataBind();
+            UserView.DataBind();
+        }
+
+        protected void DelBtn_ServerClick(object sender, EventArgs e)
+        {
+            var delStr = aspHidden.Value;
+            var getId = delStr.Split(':');
+
+            if (getId[0] == "Org")
+            {
+                var result = ApplicationDBContext.DelOrg(getId[1]);
+
+                if (result == '0')
+                {
+                    resultEl.InnerText = "0";
+                }
+                else if (result == '1')
+                {
+                    resultEl.InnerText = "1:Kullanıcı kaydı silinemedi!";
+                }
+            }
+            else if (getId[0] == "User")
+            {
+                var result = ApplicationDBContext.DelUser(getId[1]);
+
+                if (result == '0')
+                {
+                    resultEl.InnerText = "0";
+                }
+                else if (result == '1')
+                {
+                    resultEl.InnerText = "1:İşletme kaydı silinemedi!";
+                }
+            }
             OrgView.DataBind();
             UserView.DataBind();
         }
