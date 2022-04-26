@@ -27,5 +27,6 @@ namespace Database
     
         public virtual DbSet<Org> Orgs { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<WaitingUser> WaitingUsers { get; set; }
     }
 }

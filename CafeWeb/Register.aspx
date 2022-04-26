@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="LoginClass.WebForm2" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="CafeWeb.Register" %>
 
 <!DOCTYPE html lang="tr">
 
@@ -16,7 +16,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Giriş Yap</title>
+    <title>Kayıt Ol</title>
 
     <meta name="description" content="CafeWeb Giriş Sayfası" />
 
@@ -53,8 +53,8 @@
     <script src="assets/js/config.js"></script>
   </head>
 <body>
-    <form id="formAuthentication" runat="server" action="Default.aspx" class="mb-3" method="post">
-      <div class="container-xxl">
+    <form id="formRegister" runat="server" class="mb-3" method="post">
+      <div class="container-xxl" id="app">
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
           <!-- Register -->
@@ -114,7 +114,19 @@
               </div>
               <!-- /Logo -->
               <h4 class="mb-2">Hoşgeldiniz</h4>
-              <p class="mb-4">CafeWeb'in ayrıcalıklarıyla işletmeler çok mutlu.</p>
+              <p class="mb-4">CafeWeb'in ayrıcalıklarından yararlanmak için şimdi kaydolun.</p>
+
+                <div class="mb-3">
+                  <label for="username" class="form-label">Organizasyon ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="OrgId"
+                    name="OrgId"
+                    placeholder="İşletme Id Girin"
+                    autofocus="autofocus"
+                  />
+                </div>
 
                 <div class="mb-3">
                   <label for="username" class="form-label">Kullanıcı Adı</label>
@@ -123,18 +135,16 @@
                     class="form-control"
                     id="UserName"
                     name="UserName"
-                    placeholder="Enter your username"
+                    placeholder="Kullanıcı Adı Girin"
                     autofocus="autofocus"
                   />
                 </div>
+
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Şifre</label>
-                    <a href="auth-forgot-password-basic.html">
-                      <small>Şifremi unuttum</small>
-                    </a>
                   </div>
-                  <div class="input-group input-group-merge">
+                  <div class="input-group input-group-merge mb-3">
                     <input
                       type="password"
                       id="Password"
@@ -145,22 +155,39 @@
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
+
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" for="repassword">Şifre Tekrar</label>
+                    </div>
+                    <div class="input-group input-group-merge">
+                        <input
+                            type="password"
+                            id="RePassword"
+                            class="form-control"
+                            name="RePassword"
+                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                            aria-describedby="password"
+                        />
+                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                    </div>
                 </div>
+
                 <div class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" id="Remember" type="checkbox" value="true" name="Remember" />
-                    <input type="hidden" value="false" name="Remember" />
-                    <label  class="form-check-label" for="rememberMe"> Beni Hatırla </label>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
+                        <label class="form-check-label" for="terms-conditions">
+                            Beyan edilen
+                          <a href="javascript:void(0);">gizlilik politikası & sözleşmeyi</a>
+                            kabul ediyorum
+                        </label>
                   </div>
-                </div>
-                <div class="mb-3">
-                  <button id="LogIn" class="btn btn-primary d-grid w-100" type="submit" runat="server">Giriş Yap</button>
+                  <button id="RegisterBtn" class="btn btn-primary d-grid w-100" type="submit" runat="server">Kaydol</button>
                 </div>
 
               <p class="text-center">
-                <span>Platformda yeni misiniz?</span>
-                <a href="/Register.aspx">
-                  <span>Hesap oluşturun</span>
+                <span>Zaten bir hesabınız var mı?</span>
+                <a href="/Login.aspx">
+                  <span>Giriş Yapın</span>
                 </a>
               </p>
             </div>
@@ -168,11 +195,15 @@
           <!-- /Register -->
         </div>
       </div>
+          <p id="resultEl" runat="server"></p>
     </div>
 
     </form>
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/vendor/libs/jquery/jquery.js"></script>
     <script src="assets/vendor/libs/popper/popper.js"></script>
     <script src="assets/vendor/js/bootstrap.js"></script>
@@ -185,6 +216,8 @@
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+
+    <script src="assets/js/sweet-pop.js"></script>
 
     <!-- Page JS -->
 

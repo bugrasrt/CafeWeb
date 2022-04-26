@@ -73,7 +73,7 @@ namespace CafeWebAdmin
             }
             else if (result == '1')
             {
-                resultEl.InnerText = "1:Böyle bir işletme yok!";
+                resultEl.InnerText = "1:Aktif böyle bir işletme yok!";
             }
             else
             {
@@ -101,7 +101,7 @@ namespace CafeWebAdmin
             }
             else if (result == '1')
             {
-                resultEl.InnerText = "1:Böyle bir işletme yok!";
+                resultEl.InnerText = "1:Aktif böyle bir işletme yok!";
             }
             else
             {

@@ -28,6 +28,19 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="OrgFk" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="WaitingUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Auth" Type="tinyint" Nullable="false" />
+          <Property Name="CreatedAt" Type="smalldatetime" Nullable="false" />
+          <Property Name="ChangedAt" Type="smalldatetime" Nullable="false" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="OrgFk" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Users_ToOrgs">
           <End Role="Orgs" Type="Self.Orgs" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -40,12 +53,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WaitingUsers_ToOrgs">
+          <End Role="Orgs" Type="Self.Orgs" Multiplicity="1" />
+          <End Role="WaitingUsers" Type="Self.WaitingUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orgs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaitingUsers">
+              <PropertyRef Name="OrgFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CafeDataBaseModelStoreContainer">
           <EntitySet Name="Orgs" EntityType="Self.Orgs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WaitingUsers" EntityType="Self.WaitingUsers" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Users_ToOrgs" Association="Self.FK_Users_ToOrgs">
             <End Role="Orgs" EntitySet="Orgs" />
             <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaitingUsers_ToOrgs" Association="Self.FK_WaitingUsers_ToOrgs">
+            <End Role="Orgs" EntitySet="Orgs" />
+            <End Role="WaitingUsers" EntitySet="WaitingUsers" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -55,9 +85,14 @@
         <EntityContainer Name="CafeDataBaseEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Orgs" EntityType="CafeDataBaseModel.Org" />
           <EntitySet Name="Users" EntityType="CafeDataBaseModel.User" />
+          <EntitySet Name="WaitingUsers" EntityType="CafeDataBaseModel.WaitingUser" />
           <AssociationSet Name="FK_Users_ToOrgs" Association="CafeDataBaseModel.FK_Users_ToOrgs">
             <End Role="Org" EntitySet="Orgs" />
             <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaitingUsers_ToOrgs" Association="CafeDataBaseModel.FK_WaitingUsers_ToOrgs">
+            <End Role="Org" EntitySet="Orgs" />
+            <End Role="WaitingUser" EntitySet="WaitingUsers" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Org">
@@ -70,6 +105,7 @@
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="ChangedAt" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Users" Relationship="CafeDataBaseModel.FK_Users_ToOrgs" FromRole="Org" ToRole="User" />
+          <NavigationProperty Name="WaitingUsers" Relationship="CafeDataBaseModel.FK_WaitingUsers_ToOrgs" FromRole="Org" ToRole="WaitingUser" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -85,6 +121,20 @@
           <Property Name="OrgFk" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Org" Relationship="CafeDataBaseModel.FK_Users_ToOrgs" FromRole="User" ToRole="Org" />
         </EntityType>
+        <EntityType Name="WaitingUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Auth" Type="Byte" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ChangedAt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="OrgFk" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Org" Relationship="CafeDataBaseModel.FK_WaitingUsers_ToOrgs" FromRole="WaitingUser" ToRole="Org" />
+        </EntityType>
         <Association Name="FK_Users_ToOrgs">
           <End Type="CafeDataBaseModel.Org" Role="Org" Multiplicity="1" />
           <End Type="CafeDataBaseModel.User" Role="User" Multiplicity="*" />
@@ -97,7 +147,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_WaitingUsers_ToOrgs">
+          <End Type="CafeDataBaseModel.Org" Role="Org" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.WaitingUser" Role="WaitingUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Org">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaitingUser">
+              <PropertyRef Name="OrgFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -117,6 +179,20 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CafeDataBaseModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="OrgFk" ColumnName="OrgFk" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="ChangedAt" ColumnName="ChangedAt" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Auth" ColumnName="Auth" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WaitingUsers">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.WaitingUser">
+              <MappingFragment StoreEntitySet="WaitingUsers">
                 <ScalarProperty Name="OrgFk" ColumnName="OrgFk" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="ChangedAt" ColumnName="ChangedAt" />

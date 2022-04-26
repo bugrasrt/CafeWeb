@@ -107,13 +107,14 @@ namespace CafeWebDefault
                 NameValueCollection nvc = Request.Form;
                 UserOrg userOrg = new UserOrg();
 
-                if (!string.IsNullOrEmpty(nvc["username"]) &&
+                if (!string.IsNullOrEmpty(nvc["UserName"]) &&
                     !string.IsNullOrEmpty(nvc["Password"]))
                 {
-                    UserName = nvc["username"];
+                    UserName = nvc["UserName"];
                     UserName = UserName.Trim();
 
                     Password = nvc["Password"];
+                    Password = Password.Trim();
                     HashedData = CryptPass.ComputeSha256Hash(Password);
                 }
 

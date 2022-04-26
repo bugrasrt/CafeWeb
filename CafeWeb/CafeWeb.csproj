@@ -151,6 +151,7 @@
     <Content Include="assets\js\form-basic-inputs.js" />
     <Content Include="assets\js\main.js" />
     <Content Include="assets\js\pages-account-settings-account.js" />
+    <Content Include="assets\js\sweet-pop.js" />
     <Content Include="assets\js\ui-modals.js" />
     <Content Include="assets\js\ui-popover.js" />
     <Content Include="assets\js\ui-toasts.js" />
@@ -176,6 +177,7 @@
     <Content Include="assets\vendor\libs\perfect-scrollbar\perfect-scrollbar.js" />
     <Content Include="assets\vendor\libs\popper\popper.js" />
     <Content Include="Global.asax" />
+    <Content Include="Register.aspx" />
     <Content Include="Users\Admin\Home.aspx" />
     <Content Include="Users\assets\css\dore.dark.bluenavy.css" />
     <Content Include="Users\assets\css\dore.dark.bluenavy.min.css" />
@@ -611,6 +613,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
     <Compile Include="Users\Admin\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>

@@ -40,7 +40,7 @@
        <div>
         <nav class="navbar fixed-top">
         <div class="d-flex align-items-center navbar-left">
-            <a href="#" class="menu-button d-none d-md-block">
+            <a href="javascript:void(0);" class="menu-button d-none d-md-block">
                 <svg class="main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 17">
                     <rect x="0.48" y="0.5" width="7" height="1" />
                     <rect x="0.48" y="7.5" width="7" height="1" />
@@ -53,7 +53,7 @@
                 </svg>
             </a>
 
-            <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none">
+            <a href="javascript:void(0);" class="menu-button-mobile d-xs-block d-sm-block d-md-none">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 17">
                     <rect x="0.5" y="0.5" width="25" height="1" />
                     <rect x="0.5" y="7.5" width="25" height="1" />
@@ -82,45 +82,6 @@
                         data-toggle="tooltip" data-placement="left" title="Dark Mode">
                         <input class="custom-switch-input" id="switchDark" type="checkbox" checked>
                         <label class="custom-switch-btn" for="switchDark"></label>
-                    </div>
-                </div>
-
-                <div class="position-relative d-none d-sm-inline-block">
-                    <button class="header-icon btn btn-empty" type="button" id="iconMenuButton" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="simple-icon-grid"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right mt-3  position-absolute" id="iconMenuDropdown">
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-equalizer d-block"></i>
-                            <span>Ayarlar</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-male-female d-block"></i>
-                            <span>Kullanıcılar</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-puzzle d-block"></i>
-                            <span>Bileşenler</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-bar-chart-4 d-block"></i>
-                            <span>Kazançlar</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-file d-block"></i>
-                            <span>Anketler</span>
-                        </a>
-
-                        <a href="#" class="icon-menu-item">
-                            <i class="iconsminds-suitcase d-block"></i>
-                            <span>Görevler</span>
-                        </a>
-
                     </div>
                 </div>
 
@@ -167,16 +128,18 @@
             <div  id="bgBlur" v-if="orgPop || persPop" @click="orgPop=false; persPop=false;"></div>
             <div class="row text-center">
                 <div class="col-12">
-                    <h1 v-if="!showOrg && !showPers">Admin Paneli</h1>
+                    <h1 v-if="!showOrg && !showPers && !showMenus && !showFinancial">Admin Paneli</h1>
                     <h1 v-if="showOrg">İşletme İşlemleri </h1>
                     <h1 v-if="showPers">Personel İşlemleri</h1>
+                    <h1 v-if="showMenus">Menü ve Envanter İşlemleri</h1>
+                    <h1 v-if="showFinancial">Bilanço İşlemleri</h1>
                     <div class="separator mb-5"></div>
-                    <button class="w3-button w3-large w3-circle w3-light-grey" v-show="(showOrg || showPers) && (!orgPop && !persPop)" style="margin-bottom:30px;" 
-                        @click="showOrg=false; showPers=false;">‹</button>
+                    <button class="w3-button w3-large w3-circle w3-light-grey" v-if="(showOrg || showPers || showMenus || showFinancial) && (!orgPop && !persPop)" style="margin-bottom:30px;" 
+                        @click="showOrg=false; showPers=false; showMenus=false; showFinancial=false; preventPostBack();">‹</button>
                 </div>
             </div>
 
-            <div class=row v-show="showOrg || showPers" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
+            <div class=row v-if="showOrg || showPers || showMenus || showFinancial" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
                 <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false;"  type="button" class="btn btn-primary">Kaydet</button>
                 <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false;"  type="button" class="btn btn-light">Düzenle</button>
             </div>
@@ -185,15 +148,15 @@
             <div class="row" style="justify-content:center;"> 
 
                <!--İşletme Kayıt-->
-                <div class="col-12 col-lg-6 mb-5" v-show="showOrg && save">
+                <div class="col-12 col-lg-6 mb-5" v-if="showOrg && save">
                     <h5 class="mb-5">İşletme Kayıt Formu</h5>
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="mb-4">İşletme Bilgileri</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <label for="orgName">Ad</label>
-                                    <input type="text" runat="server" id="OrgName" name="OrgName" class="form-control" required>
+                                    <label for="OrgName">Ad</label>
+                                    <input type="text" runat="server" id="OrgName" name="OrgName" class="form-control">
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
                                     </div>
@@ -263,7 +226,7 @@
 
 
                 <!--İşletme Güncelleme Popup-->
-                <div id="OrgUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showOrg && edit && orgPop">
+                <div id="OrgUpdatePop" class="col-12 col-lg-6 mb-5" v-if="showOrg && edit && orgPop">
                     <button class="closeBtn" @click="orgPop=false" style="float:right;">X</button>
                     <h5 class="mb-5">İşletme Güncelleme</h5>
                     <div class="card mb-4">
@@ -271,20 +234,20 @@
                             <h5 class="mb-4">İşletme</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <input type="text" id="OrgUpdateId" name="OrgUpdateId" runat="server" class="form-control"/>
-                                    <label for="orgUpdateId">Id</label>
+                                    <input type="text" id="OrgUpdateId" name="OrgUpdateId" runat="server" class="form-control">
+                                    <label for="OrgUpdateId">Id</label>
                                 </div>
                                 <div class="form-group position-relative error-l-50">
-                                    <input type="text" id="OrgUpdateName" name="OrgUpdateName" runat="server" class="form-control" required>
+                                    <label for="OrgUpdateName">Ad</label>
+                                    <input type="text" id="OrgUpdateName" name="OrgUpdateName" runat="server" class="form-control">
                                     <div class="invalid-tooltip">
                                         Ad gerekli!
                                     </div>
-                                    <label for="orgUpdateName">Ad</label>
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" id="OrgUpdateActive" name="OrgUpdateActive" class="custom-control-input" runat="server">
                                         <label class="custom-control-label" for="OrgUpdateActive">Aktif mi?</label>
+                                        <input type="checkbox" id="OrgUpdateActive" name="OrgUpdateActive" class="custom-control-input" runat="server">
                                     </div>
                                 </div>
                                     <button type="button" class="btn btn-primary mb-0" @click="isPop=true">Güncelle</button>
@@ -294,7 +257,7 @@
                 </div>
 
                 <!--Personel Kayıt-->
-                <div class="col-12 col-lg-6" v-show="showPers && save">
+                <div class="col-12 col-lg-6" v-if="showPers && save">
                     <h5 class="mb-5">Personel Kayıt Formu</h5>
                     <div class="card mb-4">
                         <div class="card-body">
@@ -352,7 +315,7 @@
                 <div v-show="(showPers && edit) && (!orgPop && !persPop)">
                     <h5 class="mb-5">Personel Listesi</h5>
                     <asp:GridView runat="server" ID="UserView"
-                        ItemType="Database.User" DataKeyNames="Id"
+                        ItemType="Database.User" DataKeyNames="Id" AllowPaging="true"
                         SelectMethod="UserView_GetData" CssClass="styled-table" OnRowDataBound="UserView_RowDataBound"
                         AutoGenerateColumns="false" EmptyDataText="Gösterilecek herhangi bir veri yok.">
                         <Columns>
@@ -412,7 +375,7 @@
                 </div>
 
                 <!--Personel Güncelleme Popup-->
-                <div id="PersUpdatePop" class="col-12 col-lg-6 mb-5" v-show="showPers && edit && persPop">
+                <div id="PersUpdatePop" class="col-12 col-lg-6 mb-5" v-if="showPers && edit && persPop">
                     <button class="closeBtn" @click="persPop=false" style="float:right;">X</button>
                     <h5 class="mb-5">Personel Güncelleme</h5>
                     <div class="card mb-4">
@@ -461,6 +424,16 @@
                     </div>
                 </div>
 
+                <!--Bilanço İşlemleri-->
+                <div class="col-12 col-lg-6" v-if="showFinancial && save">
+
+                </div>
+
+                <!--Menu ve Envanter İşlemleri-->
+                <div class="col-12 col-lg-6" v-if="showMenus && save">
+                    
+                </div>
+
                  <!--Onay Popup-->
                 <div class="cd-popup" role="alert" v-if="isPop">
 	                <div class="cd-popup-container">
@@ -482,34 +455,34 @@
                 </div> <!-- cd-popup -->
 
                 <!--Admin İşlem Butonları-->
-                <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-show="!showOrg && !showPers">
+                <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-if="!showOrg && !showPers && !showMenus && !showFinancial">
                     <div class="card col-4" role="button" @click="showOrg=true;">
                         <a>
                             <i class="simple-icon-home"></i>
                         </a>
                         <p class="card-text mb-2">İşletme Yönetimi</p>
-                        <p class="lead">1</p>
+                        <p class="lead"><%=OrgView_GetData().Count() %></p>
                     </div>
                     <div class="card col-4" role="button" @click="showPers=true;">
                         <a>
                             <i class="simple-icon-people"></i>
                         </a>
                         <p class="card-text mb-2">Personel Yönetimi</p>
-                        <p class="lead">2</p>
+                        <p class="lead"><%=UserView_GetData().Count() %></p>
                     </div>
-                    <div class="card col-4" >
+                    <div class="card col-4" role="button" @click="showFinancial=true;">
                         <a href="javascript:void(0);">
                             <i class="simple-icon-credit-card"></i>
                         </a>
                         <p class="card-text mb-2">Bilanço Yönetimi</p>
-                        <p class="lead">3</p>
+                        <p class="lead">-</p>
                     </div>
-                    <div class="card col-4" >
+                    <div class="card col-4" role="button" @click="showMenus=true;">
                         <a href="javascript:void(0);">
                             <i class="simple-icon-basket-loaded"></i>
                         </a>
                         <p class="card-text mb-2">Envanter Yönetimi</p>
-                        <p class="lead">4</p>
+                        <p class="lead">-</p>
                     </div>
                  </div>
                </div>

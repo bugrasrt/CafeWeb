@@ -9,6 +9,8 @@ namespace Database
 {
     public class ApplicationDBContext
     {
+
+        //Kullancisi Verisini Getir
         public static UserInfo GetData(string uN, string hD, int oFk)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -29,6 +31,7 @@ namespace Database
             }
         }
 
+        //Organizasyon Kayit
         public static char SetOrg(string orgName, bool isActive)
         {
             DateTime strDate;
@@ -50,13 +53,14 @@ namespace Database
 
                     db.SaveChanges();
 
-                    return '0';
+                    return '0'; //Basarili
                 }
 
-                return '1';
+                return '1'; //Hata
             }
         }
 
+        //Organizasyon Guncelle
         public static char UpdateOrg(string orgId, string orgName, bool isActive)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -83,13 +87,14 @@ namespace Database
 
                     db.SaveChanges();
 
-                    return '0';
+                    return '0';//Basarili
                 }
 
-                return '1';
+                return '1'; //Boyle aktif bir organizasyon yok
             }
         }
 
+        //Kullanici Aktiflik Kontrol
         public static bool IsUserActive(string Id)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -106,6 +111,7 @@ namespace Database
 
         }
 
+        //Kullanici Kayit
         public static char SaveUser(string OrgId, string UserName, string Password, byte Auth, bool IsActive)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -146,6 +152,7 @@ namespace Database
             }
         }
 
+        //Kullanici Guncelleme
         public static char UpdateUser(string OrgId, string UserId, string UserName, byte Auth, bool IsActive)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -178,6 +185,7 @@ namespace Database
             }
         }
 
+        //Organizasyon Silme
         public static char DelOrg(string id)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -204,6 +212,7 @@ namespace Database
             }
         }
 
+        //Kullanici Silme
         public static char DelUser(string id)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -221,6 +230,7 @@ namespace Database
             }
         }
 
+        //Organizasyon Listeleme
         public static List<Database.Org> ListOrgs()
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -238,6 +248,7 @@ namespace Database
             }
         }
 
+        //Kullanici Listeleme
         public static List<Database.User> ListUsers()
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -252,6 +263,47 @@ namespace Database
                 }
 
                 return orgList;
+            }
+        }
+
+        public static char SaveWaitingUser(string UserName, string Password, string OrgFk)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var users = db.Users.Where(a => a.OrgFk.ToString() == OrgFk &&
+                                                a.UserName == UserName);
+
+                var waiting = db.WaitingUsers.Where(a => a.OrgFk.ToString() == OrgFk &&
+                                                         a.UserName == UserName);
+
+                if (users.Count() != 0 || waiting.Count() != 0)
+                {
+                    return '1';
+                }
+
+                var org = db.Orgs.SingleOrDefault(a => a.Id.ToString() == OrgFk && a.isActive == true);
+                var isOrg = Int32.TryParse(OrgFk, out int orgId);
+
+                if (org != null && isOrg)
+                {
+                    WaitingUser user = new WaitingUser();
+
+                    var HashedPass = CryptPass.ComputeSha256Hash(Password);
+                    user.UserName = UserName;
+                    user.Password = HashedPass;
+                    user.Auth = 3;
+                    DateTime date = DateTime.Now;
+                    user.CreatedAt = date;
+                    user.ChangedAt = date;
+                    user.isActive = false;
+                    user.OrgFk = orgId;
+                    db.WaitingUsers.Add(user);
+                    db.SaveChanges();
+
+                    return '0';
+                }
+
+                return '2';
             }
         }
     }

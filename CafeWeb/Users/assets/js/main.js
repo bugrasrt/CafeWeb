@@ -100,6 +100,8 @@ var app = new Vue({
     data: {
         showOrg: false,
         showPers: false,
+        showMenus: false,
+        showFinancial: false,
         save: true,
         edit: false,
         del: false,
@@ -185,6 +187,11 @@ var app = new Vue({
 
             this.isPop = true;
         },
+        preventPostBack: function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        },
         setState: function (showOrg, showPers, save, edit, del, isPostBack) {
             sessionStorage.setItem('showOrg', showOrg);
             sessionStorage.setItem('showPers', showPers);
@@ -234,9 +241,7 @@ var app = new Vue({
                     this.isPostBack = false;
                     sessionStorage.setItem('isPostBack', this.isPostBack);
 
-                    if (window.history.replaceState) {
-                        window.history.replaceState(null, null, window.location.href);
-                    }
+                    this.preventPostBack();
                 }
             }
         }
@@ -250,6 +255,20 @@ var app = new Vue({
             }
         },
         showPers: function (val) {
+            if (!val && !this.showOrg) {
+                this.save = true;
+                this.edit = false;
+                this.focusBtn('saveBtn');
+            }
+        },
+        showMenus: function (val) {
+            if (!val && !this.showOrg) {
+                this.save = true;
+                this.edit = false;
+                this.focusBtn('saveBtn');
+            }
+        },
+        showFinancial: function (val) {
             if (!val && !this.showOrg) {
                 this.save = true;
                 this.edit = false;

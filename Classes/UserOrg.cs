@@ -16,8 +16,12 @@ namespace WebClasses
                 {
                     string[] split = toSplit.Split('.');
 
-                    if (split.Length > 1)
+                    if (split.Length > 1 && split.Length < 3)
                         return Tuple.Create(split[0], split[1]);
+                    else
+                    {
+                        return null;
+                    }
                 }
                 catch (System.NullReferenceException)
                 {
@@ -38,8 +42,12 @@ namespace WebClasses
                 {
                     string[] split = toSplit.Split(',');
 
-                    if (split.Length > 1)
+                    if (split.Length > 1 && split.Length < 3)
                         return Tuple.Create(split[0], split[1]);
+                    else
+                    {
+                        return null;
+                    }
                 }
                 catch (System.NullReferenceException)
                 {

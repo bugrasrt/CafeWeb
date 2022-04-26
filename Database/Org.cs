@@ -18,6 +18,7 @@ namespace Database
         public Org()
         {
             this.Users = new HashSet<User>();
+            this.WaitingUsers = new HashSet<WaitingUser>();
         }
     
         public int Id { get; set; }
@@ -28,5 +29,7 @@ namespace Database
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WaitingUser> WaitingUsers { get; set; }
     }
 }
