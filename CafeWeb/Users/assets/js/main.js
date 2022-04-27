@@ -12,13 +12,6 @@ function GetOrgRow(row) {
     });
 }
 
-function GetRowForDel (type, row) {
-    var gridRow = row.parentNode.parentNode.parentNode;
-    var id = gridRow.cells[0].textContent;
-    sessionStorage.setItem('delId', `${type}:${id}`);
-    document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
-}
-
 function GetPersRow(row) {
     $(document).ready(function () {
 
@@ -33,43 +26,22 @@ function GetPersRow(row) {
     });
 }
 
-function UpdatePopup() {
-    let resultEl = document.getElementById('resultEl');
-    let result = resultEl.textContent;
-    let resultList = result.split(':');
-
-    if (resultList[0] != '0') {
-        ErrorPopup(resultList[1]);
-    }
-    else {
-        Swal.fire(
-            'Başarılı',
-            'Başarıyla güncellenmiştir.',
-            'success'
-        )
-    }
-    resultEl.innerText = '';
+function GetRowForDel(type, row) {
+    var gridRow = row.parentNode.parentNode.parentNode;
+    var id = gridRow.cells[0].textContent;
+    sessionStorage.setItem('delId', `${type}:${id}`);
+    document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
 }
 
-function DelPopup() {
-    let resultEl = document.getElementById('resultEl');
-    let result = resultEl.textContent;
-    let resultList = result.split(':');
+function GetWaitingRow(row) {
+    $(document).ready(function () {
 
-    if (resultList[0] != '0') {
-        ErrorPopup(resultList[1]);
-    }
-    else {
-        Swal.fire(
-            'Başarılı',
-            'Başarıyla silinmiştir.',
-            'success'
-        )
-    }
-    resultEl.innerText = '';
+        var gridRow = row.parentNode.parentNode.parentNode;
+        document.getElementById('aspHidden').value = gridRow.cells[0].textContent;
+    });
 }
 
-function SavePopup() {
+function SweetPopup(option) {
     let resultEl = document.getElementById('resultEl');
     let result = resultEl.textContent;
     let resultList = result.split(':');
@@ -78,12 +50,42 @@ function SavePopup() {
         ErrorPopup(resultList[1]);
     }
     else {
-        Swal.fire(
-            'Başarılı',
-            'Başarıyla kaydedilmiştir.',
-            'success'
-        )
+        switch (option) {
+            case 'save':
+                Swal.fire(
+                    'Başarılı',
+                    'Başarıyla kaydedilmiştir.',
+                    'success'
+                )
+                break;
+
+            case 'edit':
+                Swal.fire(
+                    'Başarılı',
+                    'Başarıyla güncellenmiştir.',
+                    'success'
+                )
+                break;
+
+            case 'del':
+                Swal.fire(
+                    'Başarılı',
+                    'Başarıyla silinmiştir.',
+                    'success'
+                )
+                break;
+
+            case 'onay':
+                Swal.fire(
+                    'Başarılı',
+                    'Başarıyla onaylanmıştır.',
+                    'success'
+                )
+                break;
+        }
+        
     }
+
     resultEl.innerText = '';
 }
 
@@ -105,6 +107,7 @@ var app = new Vue({
         save: true,
         edit: false,
         del: false,
+        waiting: false,
         orgPop: false,
         persPop: false,
         isPostBack: false,
@@ -113,22 +116,70 @@ var app = new Vue({
     mounted() {
         this.getState();
     },
+    updated() {
+        this.setFocusBtn();
+    },
     methods: {
-        focusBtn: function (typ) {
-            var dataEl = document.getElementById(typ);
+        focusBtn: function (btn) {
+
+            var dataEl = document.getElementById(btn);
             dataEl.className = 'btn';
             dataEl.classList.add('btn-primary');
-            switch (typ) {
-                case 'saveBtn':
-                    this.dynamicClass(['editBtn']);
-                    break;
 
-                case 'editBtn':
-                    this.dynamicClass(['saveBtn']);
-                    break;
+            if (this.showPers) {
+                switch (btn) {
+                    case 'saveBtn':
+                        this.dynamicClass(['editBtn', 'waitingBtn']);
 
-                default:
-                    break;
+                        break;
+
+                    case 'editBtn':
+                        this.dynamicClass(['saveBtn', 'waitingBtn']);
+
+                        break;
+
+                    case 'waitingBtn':
+                        this.dynamicClass(['saveBtn', 'editBtn']);
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            else {
+                switch (btn) {
+                    case 'saveBtn':
+                        this.dynamicClass(['editBtn']);
+
+                        break;
+
+                    case 'editBtn':
+                        this.dynamicClass(['saveBtn']);
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            
+        },
+        setFocusBtn: function () {
+            if ((this.save && !this.edit) && (!this.del && !this.waiting)) {
+                if (this.showPers || this.showOrg || this.showMenus || this.showFinancial) {
+                    this.focusBtn('saveBtn');
+                } 
+            }
+            else if ((!this.save && this.edit) && !this.waiting) {
+                if (this.showPers || this.showOrg || this.showMenus || this.showFinancial) {
+                    this.focusBtn('editBtn');
+                }
+            }
+            else if ((!this.save && !this.edit) && (!this.del && this.waiting)) {
+                if (this.showPers) {
+                    this.focusBtn('waitingBtn');
+                }
             }
         },
         dynamicClass: function (btnList) {
@@ -137,8 +188,20 @@ var app = new Vue({
                 document.getElementById(btnList[i]).classList.add('btn-light');
             }
         },
+        setFirstState: function () {
+            this.showOrg = false;
+            this.showPers = false;
+            this.showMenus = false;
+            this.showFinancial = false;
+            this.save = true;
+            this.edit = false;
+            this.del = false;
+            this.waiting = false;
+            this.focusBtn('saveBtn');
+        },
         clearResultEl: function () {
             document.getElementById('resultEl').innerText = '';
+            document.getElementById('aspHidden').innerText = '';
         },
         persFormCheck: function () {
             let orgFk = document.getElementById('PersUpdateOrgId');
@@ -192,12 +255,13 @@ var app = new Vue({
                 window.history.replaceState(null, null, window.location.href);
             }
         },
-        setState: function (showOrg, showPers, save, edit, del, isPostBack) {
+        setState: function (showOrg, showPers, save, edit, del, waiting, isPostBack) {
             sessionStorage.setItem('showOrg', showOrg);
             sessionStorage.setItem('showPers', showPers);
             sessionStorage.setItem('save', save);
             sessionStorage.setItem('edit', edit);
             sessionStorage.setItem('del', del);
+            sessionStorage.setItem('onay', waiting);
             sessionStorage.setItem('isPostBack', isPostBack);
             
         },
@@ -221,21 +285,25 @@ var app = new Vue({
                     if (sessionStorage.getItem('del') != null || sessionStorage.getItem('del') != "") {
                         this.del = sessionStorage.getItem('del') == "true" ? true : false;
                     }
-
-
-                    if (this.save && !this.del) {
-                        this.focusBtn('saveBtn');
-                        SavePopup();
+                    if (sessionStorage.getItem('onay') != null || sessionStorage.getItem('onay') != "") {
+                        this.waiting = sessionStorage.getItem('onay') == "true" ? true : false;
                     }
-                    else if (this.edit && !this.del) {
-                        this.focusBtn('editBtn');
-                        UpdatePopup();
+
+                    if ((this.save && !this.edit) && (!this.del && !this.waiting)) {
+                        SweetPopup('save');
                     }
-                    else if (this.del) {
-                        document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
-                        this.focusBtn('editBtn');
-                        this.del = false;
-                        DelPopup();
+                    else if ((!this.save && this.edit) && !this.waiting) {
+                        if (this.del) {
+                            document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
+                            this.del = false;
+                            SweetPopup('del');
+                        }
+                        else {
+                            SweetPopup('edit');
+                        }
+                    }
+                    else if ((!this.save && !this.edit) && (!this.del && this.waiting)) {
+                        SweetPopup('onay');
                     }
 
                     this.isPostBack = false;
@@ -243,36 +311,6 @@ var app = new Vue({
 
                     this.preventPostBack();
                 }
-            }
-        }
-    },
-    watch: {
-        showOrg: function (val) {
-            if (!val && !this.showPers) {
-                this.save = true;
-                this.edit = false;
-                this.focusBtn('saveBtn');
-            }
-        },
-        showPers: function (val) {
-            if (!val && !this.showOrg) {
-                this.save = true;
-                this.edit = false;
-                this.focusBtn('saveBtn');
-            }
-        },
-        showMenus: function (val) {
-            if (!val && !this.showOrg) {
-                this.save = true;
-                this.edit = false;
-                this.focusBtn('saveBtn');
-            }
-        },
-        showFinancial: function (val) {
-            if (!val && !this.showOrg) {
-                this.save = true;
-                this.edit = false;
-                this.focusBtn('saveBtn');
             }
         }
     }

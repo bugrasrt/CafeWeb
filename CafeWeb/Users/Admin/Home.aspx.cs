@@ -168,6 +168,17 @@ namespace CafeWebAdmin
             return ApplicationDBContext.ListUsers().AsQueryable();
         }
 
+        // The return type can be changed to IEnumerable, however to support
+        // paging and sorting, the following parameters must be added:
+        //     int maximumRows
+        //     int startRowIndex
+        //     out int totalRowCount
+        //     string sortByExpression
+        public IQueryable<Database.WaitingUser> WaitingUserView_GetData()
+        {
+            return ApplicationDBContext.ListWaitingUsers().AsQueryable(); ;
+        }
+
         protected void OrgView_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             foreach (TableCell tc in e.Row.Cells)
@@ -186,6 +197,34 @@ namespace CafeWebAdmin
                 tc.BorderWidth = 0;
                 tc.BorderColor = System.Drawing.Color.Transparent;
             }
+        }
+
+        protected void WaitingUserView_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            foreach (TableCell tc in e.Row.Cells)
+            {
+                tc.BorderStyle = BorderStyle.None;
+                tc.BorderWidth = 0;
+                tc.BorderColor = System.Drawing.Color.Transparent;
+            }
+        }
+
+        protected void OnayWaitingBtn_ServerClick(object sender, EventArgs e)
+        {
+            var WaitingId = aspHidden.Value;
+            var result = ApplicationDBContext.TransferToUsers(WaitingId);
+
+            if (result == '0')
+            {
+                resultEl.InnerText = "0";
+            }
+            else if (result == '1')
+            {
+                resultEl.InnerText = "1:Kayıt bekleyen böyle bir kullanıcı yok!";
+            }
+
+            UserView.DataBind();
+            WaitingUserView.DataBind();
         }
 
         protected void SignOutFunc()

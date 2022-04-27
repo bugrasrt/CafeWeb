@@ -135,13 +135,14 @@
                     <h1 v-if="showFinancial">Bilanço İşlemleri</h1>
                     <div class="separator mb-5"></div>
                     <button class="w3-button w3-large w3-circle w3-light-grey" v-if="(showOrg || showPers || showMenus || showFinancial) && (!orgPop && !persPop)" style="margin-bottom:30px;" 
-                        @click="showOrg=false; showPers=false; showMenus=false; showFinancial=false; preventPostBack();">‹</button>
+                        @click="setFirstState(); preventPostBack();">‹</button>
                 </div>
             </div>
 
             <div class=row v-if="showOrg || showPers || showMenus || showFinancial" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
-                <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false;"  type="button" class="btn btn-primary">Kaydet</button>
-                <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false;"  type="button" class="btn btn-light">Düzenle</button>
+                <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; waiting=false;"  type="button" class="btn btn-primary">Kaydet</button>
+                <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; waiting=false;"  type="button" class="btn btn-light">Düzenle</button>
+                <button v-show="!showOrg && !showMenus && !showFinancial && showPers" id="waitingBtn" @focus="focusBtn('waitingBtn'); edit=false; save=false; waiting=true;"  type="button" class="btn btn-light">Bekleyenler</button>
             </div>
             
             <!--İşlem Blokları-->
@@ -257,7 +258,7 @@
                 </div>
 
                 <!--Personel Kayıt-->
-                <div class="col-12 col-lg-6" v-if="showPers && save">
+                <div class="col-12 col-lg-6" v-if="(showPers && save) && (!edit && !waiting)">
                     <h5 class="mb-5">Personel Kayıt Formu</h5>
                     <div class="card mb-4">
                         <div class="card-body">
@@ -312,7 +313,7 @@
                 </div>
 
                 <!--Personel Düzenleme-->
-                <div v-show="(showPers && edit) && (!orgPop && !persPop)">
+                <div v-show="((showPers && edit) && (!save && !waiting)) && (!orgPop && !persPop)">
                     <h5 class="mb-5">Personel Listesi</h5>
                     <asp:GridView runat="server" ID="UserView"
                         ItemType="Database.User" DataKeyNames="Id" AllowPaging="true"
@@ -424,6 +425,62 @@
                     </div>
                 </div>
 
+                <!--Bekleyen Personeller-->
+                <div v-show="(showPers && waiting) && (!orgPop && !persPop) && ((!save && !edit) && waiting)">
+                    <h5 class="mb-5">Onay Bekleyenler</h5>
+                    <asp:GridView runat="server" ID="WaitingUserView"
+                        ItemType="Database.WaitingUser" DataKeyNames="Id" AllowPaging="true"
+                        SelectMethod="WaitingUserView_GetData" CssClass="styled-table" OnRowDataBound="WaitingUserView_RowDataBound"
+                        AutoGenerateColumns="false" EmptyDataText="Gösterilecek herhangi bir veri yok.">
+                        <Columns>
+                            <asp:DynamicField DataField="Id" />
+                            <asp:TemplateField HeaderText="Kullanıcı Adı">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.UserName.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Yetki">
+                                <ItemTemplate>
+                                <asp:Label ID="authLabel" Text='<%# Item.Auth == 2 ? "Yetkili" : "Personel" %>' 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Oluşturulma Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.CreatedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                            <asp:TemplateField HeaderText="Değiştirilme Tarihi">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.ChangedAt.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Aktif mi?">
+                                <ItemTemplate>
+                                <asp:Label Text='<%# Item.isActive == true ? "Evet": "Hayır" %>' 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Organizasyon Id">
+                                <ItemTemplate>
+                                <asp:Label Text="<%# Item.OrgFk.ToString() %>" 
+                                    runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Onayla">
+                                <ItemTemplate>
+                                <div @click="isPop=true;" role="button">
+                                     <a id="updatePers" href="javascript:void(0);" onclick="GetWaitingRow(this);">Onayla</a>
+                                </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+
                 <!--Bilanço İşlemleri-->
                 <div class="col-12 col-lg-6" v-if="showFinancial && save">
 
@@ -437,16 +494,18 @@
                  <!--Onay Popup-->
                 <div class="cd-popup" role="alert" v-if="isPop">
 	                <div class="cd-popup-container">
-		                <p v-if="((showOrg && !orgPop) || (showPers && !persPop)) && !del">Kaydetmek istediğinize emin misiniz?</p>
-                        <p v-if="((showOrg && orgPop) || (showPers && persPop)) && !del">Güncellemek istediğinize emin misiniz?</p>
-                        <p v-if="((!persPop && !orgPop) && (edit && del)) ">Silmek istediğinize emin misiniz?</p>
+		                <p v-if="((showOrg && !orgPop) || (showPers && !persPop)) && (!del && !waiting)">Kaydetmek istediğinize emin misiniz?</p>
+                        <p v-if="((showOrg && orgPop) || (showPers && persPop)) && (!del && !waiting)">Güncellemek istediğinize emin misiniz?</p>
+                        <p v-if="((!persPop && !orgPop) && (edit && del) && !waiting) ">Silmek istediğinize emin misiniz?</p>
+                        <p v-if="((!persPop && !orgPop) && (!showOrg && showPers) && ((!edit && !del) && waiting)) ">Onaylamak istediğinize emin misiniz?</p>
 		                <ul class="cd-buttons">
-                            <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, del, isPostBack);">
-                                <a id="SaveOrgBtn" v-if="(showOrg && !orgPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
-                                <a id="OrgUpdateBtn" v-if="(showOrg && orgPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
-                                <a id="SaveUserBtn" v-if="(showPers && !persPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
-                                <a id="PersUpdateBtn" v-if="(showPers && persPop) && !del" role="button" href="javascript:void(0);" runat="server" onserverclick="PersUpdateBtn_ServerClick">Evet</a>
-                                <a id="DelBtn" v-if="(!orgPop && !persPop) && (edit && del)" role="button" href="javascript:void(0);" runat="server" onserverclick="DelBtn_ServerClick">Evet</a>
+                            <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, del, waiting, isPostBack);">
+                                <a id="SaveOrgBtn" v-if="(showOrg && !orgPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
+                                <a id="OrgUpdateBtn" v-if="(showOrg && orgPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
+                                <a id="SaveUserBtn" v-if="(showPers && !persPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
+                                <a id="PersUpdateBtn" v-if="(showPers && persPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="PersUpdateBtn_ServerClick">Evet</a>
+                                <a id="DelBtn" v-if="(!orgPop && !persPop) && (edit && del) && !waiting" role="button" href="javascript:void(0);" runat="server" onserverclick="DelBtn_ServerClick">Evet</a>
+                                <a id="OnayWaitingBtn" v-if="((!persPop && !orgPop) && (!showOrg && showPers) && ((!edit && !del) && waiting))" role="button" href="javascript:void(0);" runat="server" onserverclick="OnayWaitingBtn_ServerClick">Evet</a>
                             </li>
 			                <li><a href="javascript:void(0);" @click="isPop=false; del=false; clearResultEl();">Hayır</a></li>
 		                </ul>

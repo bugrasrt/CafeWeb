@@ -123,7 +123,7 @@
                     class="form-control"
                     id="UserName"
                     name="UserName"
-                    placeholder="Enter your username"
+                    placeholder="Kullanıcı adı girin"
                     autofocus="autofocus"
                   />
                 </div>

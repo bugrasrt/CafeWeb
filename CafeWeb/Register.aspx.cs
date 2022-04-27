@@ -49,6 +49,12 @@ namespace CafeWeb
                     resultEl.InnerText = "3:Şifreler uyumsuz!";
                     check = false;
                 }
+
+                if (!terms.Checked)
+                {
+                    resultEl.InnerText = "4:Şartları onaylamanız gerek!";
+                    check = false;
+                }
                 
             }
 
@@ -68,6 +74,8 @@ namespace CafeWeb
                 {
                     resultEl.InnerText = "1:Bu işletmede aynı kullanıcı adında biri zaten kayıtlı!";
                 }
+
+                terms.Checked = false;
             }
         }
     }

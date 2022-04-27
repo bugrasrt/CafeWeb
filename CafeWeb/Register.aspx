@@ -123,7 +123,7 @@
                     class="form-control"
                     id="OrgId"
                     name="OrgId"
-                    placeholder="İşletme Id Girin"
+                    placeholder="İşletme id girin"
                     autofocus="autofocus"
                   />
                 </div>
@@ -135,7 +135,7 @@
                     class="form-control"
                     id="UserName"
                     name="UserName"
-                    placeholder="Kullanıcı Adı Girin"
+                    placeholder="Kullanıcı adı girin"
                     autofocus="autofocus"
                   />
                 </div>
@@ -174,7 +174,7 @@
 
                 <div class="mb-3">
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
+                        <input class="form-check-input" type="checkbox" id="terms" name="terms" runat="server" />
                         <label class="form-check-label" for="terms-conditions">
                             Beyan edilen
                           <a href="javascript:void(0);">gizlilik politikası & sözleşmeyi</a>

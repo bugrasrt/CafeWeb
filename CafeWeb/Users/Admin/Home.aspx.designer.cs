@@ -195,6 +195,15 @@ namespace CafeWebAdmin
         protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox PersUpdateActive;
 
         /// <summary>
+        /// WaitingUserView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView WaitingUserView;
+
+        /// <summary>
         /// SaveOrgBtn control.
         /// </summary>
         /// <remarks>
@@ -238,6 +247,15 @@ namespace CafeWebAdmin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor DelBtn;
+
+        /// <summary>
+        /// OnayWaitingBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor OnayWaitingBtn;
 
         /// <summary>
         /// resultEl control.

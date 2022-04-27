@@ -255,17 +255,36 @@ namespace Database
             {
                 var users = db.Users.Where(a => a.Auth > 1);
 
-                var orgList = users.ToList();
+                var userList = users.ToList();
 
-                if (orgList == null)
+                if (userList == null)
                 {
                     return null;
                 }
 
-                return orgList;
+                return userList;
             }
         }
 
+        //Bekleyenler Listeleme
+        public static List<Database.WaitingUser> ListWaitingUsers()
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var users = db.WaitingUsers;
+
+                var waitingUserList = users.ToList();
+
+                if (waitingUserList == null)
+                {
+                    return null;
+                }
+
+                return waitingUserList;
+            }
+        }
+
+        //Kayıt olanları onay sürecine dahil et
         public static char SaveWaitingUser(string UserName, string Password, string OrgFk)
         {
             using (CafeDataBaseEntities db = new CafeDataBaseEntities())
@@ -304,6 +323,43 @@ namespace Database
                 }
 
                 return '2';
+            }
+        }
+
+        //Bekleyenlerden Users a transfer et
+        public static char TransferToUsers(string UserId)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var waitingUser = db.WaitingUsers.Where(a => a.Id.ToString() == UserId);
+
+                User newUser = new User();
+
+                if (waitingUser != null)
+                {
+                    foreach (var user in waitingUser)
+                    {
+                        newUser.OrgFk = user.OrgFk;
+                        newUser.UserName = user.UserName;
+                        newUser.Password = user.Password;
+                        newUser.Auth = user.Auth;
+                        newUser.CreatedAt = user.CreatedAt;
+                        DateTime date = DateTime.Now;
+                        newUser.ChangedAt = date;
+                        newUser.isActive = true;
+
+                        db.Users.Add(newUser);
+
+                        db.WaitingUsers.Remove(user);
+                    }
+
+                    db.SaveChanges();
+
+                    return '0';
+
+                }
+
+                return '1';
             }
         }
     }
