@@ -362,5 +362,25 @@ namespace Database
                 return '1';
             }
         }
+
+        public static char DelWaitingUser(string UserId)
+        {
+            using (CafeDataBaseEntities db = new CafeDataBaseEntities())
+            {
+                var waitingUser = db.WaitingUsers.Where(a => a.Id.ToString() == UserId);
+
+                if (waitingUser.FirstOrDefault() != null)
+                {
+                    db.WaitingUsers.Remove(waitingUser.FirstOrDefault());
+
+                    db.SaveChangesAsync();
+
+                    return '0';
+                }
+
+                return '1';
+
+            }
+        }
     }
 }

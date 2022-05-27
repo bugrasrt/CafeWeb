@@ -211,8 +211,8 @@ namespace CafeWebAdmin
 
         protected void OnayWaitingBtn_ServerClick(object sender, EventArgs e)
         {
-            var WaitingId = aspHidden.Value;
-            var result = ApplicationDBContext.TransferToUsers(WaitingId);
+            var WaitingId = aspHidden.Value.Split(':');
+            var result = ApplicationDBContext.TransferToUsers(WaitingId[1]);
 
             if (result == '0')
             {
@@ -224,6 +224,23 @@ namespace CafeWebAdmin
             }
 
             UserView.DataBind();
+            WaitingUserView.DataBind();
+        }
+
+        protected void DelWaitingBtn_ServerClick(object sender, EventArgs e)
+        {
+            var WaitingId = aspHidden.Value.Split(':');
+            var result = ApplicationDBContext.DelWaitingUser(WaitingId[1]);
+
+            if (result == '0')
+            {
+                resultEl.InnerText = "0";
+            }
+            else if (result == '1')
+            {
+                resultEl.InnerText = "1:Bir hata oluştu!";
+            }
+
             WaitingUserView.DataBind();
         }
 

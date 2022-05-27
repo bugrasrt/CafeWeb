@@ -139,7 +139,7 @@
                 </div>
             </div>
 
-            <div class=row v-if="showOrg || showPers || showMenus || showFinancial" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
+            <div class=row v-if="showOrg || showPers" style="gap: 30px; margin-bottom: 30px; justify-content:center; align-content:center;">
                 <button id="saveBtn" @focus="focusBtn('saveBtn'); save=true; edit=false; waiting=false;"  type="button" class="btn btn-primary">Kaydet</button>
                 <button id="editBtn" @focus="focusBtn('editBtn'); edit=true; save=false; waiting=false;"  type="button" class="btn btn-light">Düzenle</button>
                 <button v-show="!showOrg && !showMenus && !showFinancial && showPers" id="waitingBtn" @focus="focusBtn('waitingBtn'); edit=false; save=false; waiting=true;"  type="button" class="btn btn-light">Bekleyenler</button>
@@ -235,8 +235,8 @@
                             <h5 class="mb-4">İşletme</h5>
                             <div class="needs-validation tooltip-label-right">
                                 <div class="form-group position-relative error-l-50">
-                                    <input type="text" id="OrgUpdateId" name="OrgUpdateId" runat="server" class="form-control">
                                     <label for="OrgUpdateId">Id</label>
+                                    <input type="text" id="OrgUpdateId" name="OrgUpdateId" runat="server" class="form-control">
                                 </div>
                                 <div class="form-group position-relative error-l-50">
                                     <label for="OrgUpdateName">Ad</label>
@@ -247,8 +247,8 @@
                                 </div>
                                 <div class="form-group position-relative">
                                     <div class="custom-control custom-checkbox">
-                                        <label class="custom-control-label" for="OrgUpdateActive">Aktif mi?</label>
                                         <input type="checkbox" id="OrgUpdateActive" name="OrgUpdateActive" class="custom-control-input" runat="server">
+                                        <label class="custom-control-label" for="OrgUpdateActive">Aktif mi?</label>
                                     </div>
                                 </div>
                                     <button type="button" class="btn btn-primary mb-0" @click="isPop=true">Güncelle</button>
@@ -477,6 +477,13 @@
                                 </div>
                                 </ItemTemplate>
                             </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sil">
+                                <ItemTemplate>
+                                <div @click="isPop=true; del=true;">
+                                    <a href="javascript:void(0);" onclick="GetRowForDel('User', this);">Sil</a>
+                                </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
@@ -496,22 +503,28 @@
 	                <div class="cd-popup-container">
 		                <p v-if="((showOrg && !orgPop) || (showPers && !persPop)) && (!del && !waiting)">Kaydetmek istediğinize emin misiniz?</p>
                         <p v-if="((showOrg && orgPop) || (showPers && persPop)) && (!del && !waiting)">Güncellemek istediğinize emin misiniz?</p>
-                        <p v-if="((!persPop && !orgPop) && (edit && del) && !waiting) ">Silmek istediğinize emin misiniz?</p>
+                        <p v-if="(!persPop && !orgPop) && del">Silmek istediğinize emin misiniz?</p>
                         <p v-if="((!persPop && !orgPop) && (!showOrg && showPers) && ((!edit && !del) && waiting)) ">Onaylamak istediğinize emin misiniz?</p>
 		                <ul class="cd-buttons">
-                            <li role="button" @click="isPostBack=true; setState(showOrg, showPers, save, edit, del, waiting, isPostBack);">
+                            <li role="button" @click="isPostBack=true; setState();">
                                 <a id="SaveOrgBtn" v-if="(showOrg && !orgPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveOrg_ServerClick">Evet</a>
                                 <a id="OrgUpdateBtn" v-if="(showOrg && orgPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="OrgUpdateBtn_ServerClick">Evet</a>
                                 <a id="SaveUserBtn" v-if="(showPers && !persPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="SaveUser_ServerClick">Evet</a>
                                 <a id="PersUpdateBtn" v-if="(showPers && persPop) && (!del && !waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="PersUpdateBtn_ServerClick">Evet</a>
                                 <a id="DelBtn" v-if="(!orgPop && !persPop) && (edit && del) && !waiting" role="button" href="javascript:void(0);" runat="server" onserverclick="DelBtn_ServerClick">Evet</a>
                                 <a id="OnayWaitingBtn" v-if="((!persPop && !orgPop) && (!showOrg && showPers) && ((!edit && !del) && waiting))" role="button" href="javascript:void(0);" runat="server" onserverclick="OnayWaitingBtn_ServerClick">Evet</a>
+                                <a id="DelWaitingBtn" v-if="(!orgPop && !persPop) && (del && waiting)" role="button" href="javascript:void(0);" runat="server" onserverclick="DelWaitingBtn_ServerClick">Evet</a>
                             </li>
 			                <li><a href="javascript:void(0);" @click="isPop=false; del=false; clearResultEl();">Hayır</a></li>
 		                </ul>
 		                <a href="javascript:void(0);" @click="isPop=false; del=false; clearResultEl();" class="cd-popup-close img-replace"></a>
 	                </div> <!-- cd-popup-container -->
                 </div> <!-- cd-popup -->
+
+                <!-- Menu İşlemleri -->
+                <div>
+
+                </div>
 
                 <!--Admin İşlem Butonları-->
                 <div id="adminIsl" class="container-fluid icon-cards-row row text-center" v-if="!showOrg && !showPers && !showMenus && !showFinancial">
@@ -529,18 +542,18 @@
                         <p class="card-text mb-2">Personel Yönetimi</p>
                         <p class="lead"><%=UserView_GetData().Count() %></p>
                     </div>
-                    <div class="card col-4" role="button" @click="showFinancial=true;">
-                        <a href="javascript:void(0);">
-                            <i class="simple-icon-credit-card"></i>
-                        </a>
-                        <p class="card-text mb-2">Bilanço Yönetimi</p>
-                        <p class="lead">-</p>
-                    </div>
                     <div class="card col-4" role="button" @click="showMenus=true;">
                         <a href="javascript:void(0);">
                             <i class="simple-icon-basket-loaded"></i>
                         </a>
                         <p class="card-text mb-2">Envanter Yönetimi</p>
+                        <p class="lead">-</p>
+                    </div>
+                    <div class="card col-4" role="button" @click="showFinancial=true;">
+                        <a href="javascript:void(0);">
+                            <i class="simple-icon-credit-card"></i>
+                        </a>
+                        <p class="card-text mb-2">Bilanço Yönetimi</p>
                         <p class="lead">-</p>
                     </div>
                  </div>

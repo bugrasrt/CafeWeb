@@ -5,9 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="47a2ac4e6e054164b38fa6a89bd754fa" Name="Diagram1" ZoomLevel="74">
-        <EntityTypeShape EntityType="CafeDataBaseModel.Org" Width="1.5" PointX="0.75" PointY="3.125" />
-        <EntityTypeShape EntityType="CafeDataBaseModel.User" Width="1.5" PointX="3" PointY="4.625" />
-        <EntityTypeShape EntityType="CafeDataBaseModel.WaitingUser" Width="1.5" PointX="3" PointY="1.125" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Category" Width="1.5" PointX="3" PointY="11.75" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Drink" Width="1.5" PointX="8" PointY="3.875" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.DrinkType" Width="1.5" PointX="5.75" PointY="3.875" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Food" Width="1.5" PointX="8" PointY="0.875" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.FoodType" Width="1.5" PointX="5.75" PointY="0.875" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Menu" Width="1.5" PointX="3" PointY="8.625" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Org" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.Product" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.User" Width="1.5" PointX="3" PointY="1.625" />
+        <EntityTypeShape EntityType="CafeDataBaseModel.WaitingUser" Width="1.5" PointX="3" PointY="5.125" />
+        <AssociationConnector Association="CafeDataBaseModel.FK_Products_ToCategories" />
+        <AssociationConnector Association="CafeDataBaseModel.FK_Drink_ToDrinkType" />
+        <AssociationConnector Association="CafeDataBaseModel.FK_Food_ToFoodType" />
+        <AssociationConnector Association="CafeDataBaseModel.FK_Menus_ToOrgFk" />
+        <AssociationConnector Association="CafeDataBaseModel.FK_Products_ToMenus" />
         <AssociationConnector Association="CafeDataBaseModel.FK_Users_ToOrgs" />
         <AssociationConnector Association="CafeDataBaseModel.FK_WaitingUsers_ToOrgs" />
       </Diagram>

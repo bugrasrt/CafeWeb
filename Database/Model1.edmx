@@ -5,6 +5,49 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CafeDataBaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Drink">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DrinkTypeFk" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DrinkType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DrinkDesc" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Food">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FoodTypeFk" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FoodType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FoodDesc" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Menus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="OrgFk" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Orgs">
           <Key>
             <PropertyRef Name="Id" />
@@ -14,6 +57,17 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="CreatedAt" Type="smalldatetime" Nullable="false" />
           <Property Name="ChangedAt" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="CategoryFk" Type="bit" Nullable="false" />
+          <Property Name="ImgName" Type="varchar" MaxLength="20" />
+          <Property Name="MenuFk" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -41,6 +95,66 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
           <Property Name="OrgFk" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Drink_ToDrinkType">
+          <End Role="DrinkType" Type="Self.DrinkType" Multiplicity="1" />
+          <End Role="Drink" Type="Self.Drink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DrinkType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Drink">
+              <PropertyRef Name="DrinkTypeFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Food_ToFoodType">
+          <End Role="FoodType" Type="Self.FoodType" Multiplicity="1" />
+          <End Role="Food" Type="Self.Food" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Food">
+              <PropertyRef Name="FoodTypeFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Menus_ToOrgFk">
+          <End Role="Orgs" Type="Self.Orgs" Multiplicity="1" />
+          <End Role="Menus" Type="Self.Menus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orgs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Menus">
+              <PropertyRef Name="OrgFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_ToCategories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="CategoryFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_ToMenus">
+          <End Role="Menus" Type="Self.Menus" Multiplicity="1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Menus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="MenuFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_ToOrgs">
           <End Role="Orgs" Type="Self.Orgs" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -66,9 +180,36 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="CafeDataBaseModelStoreContainer">
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Drink" EntityType="Self.Drink" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DrinkType" EntityType="Self.DrinkType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Food" EntityType="Self.Food" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FoodType" EntityType="Self.FoodType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Menus" EntityType="Self.Menus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orgs" EntityType="Self.Orgs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WaitingUsers" EntityType="Self.WaitingUsers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Drink_ToDrinkType" Association="Self.FK_Drink_ToDrinkType">
+            <End Role="DrinkType" EntitySet="DrinkType" />
+            <End Role="Drink" EntitySet="Drink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Food_ToFoodType" Association="Self.FK_Food_ToFoodType">
+            <End Role="FoodType" EntitySet="FoodType" />
+            <End Role="Food" EntitySet="Food" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Menus_ToOrgFk" Association="Self.FK_Menus_ToOrgFk">
+            <End Role="Orgs" EntitySet="Orgs" />
+            <End Role="Menus" EntitySet="Menus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_ToCategories" Association="Self.FK_Products_ToCategories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_ToMenus" Association="Self.FK_Products_ToMenus">
+            <End Role="Menus" EntitySet="Menus" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_ToOrgs" Association="Self.FK_Users_ToOrgs">
             <End Role="Orgs" EntitySet="Orgs" />
             <End Role="Users" EntitySet="Users" />
@@ -83,9 +224,36 @@
     <edmx:ConceptualModels>
       <Schema Namespace="CafeDataBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="CafeDataBaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="CafeDataBaseModel.Category" />
+          <EntitySet Name="Drinks" EntityType="CafeDataBaseModel.Drink" />
+          <EntitySet Name="DrinkTypes" EntityType="CafeDataBaseModel.DrinkType" />
+          <EntitySet Name="Foods" EntityType="CafeDataBaseModel.Food" />
+          <EntitySet Name="FoodTypes" EntityType="CafeDataBaseModel.FoodType" />
+          <EntitySet Name="Menus" EntityType="CafeDataBaseModel.Menu" />
           <EntitySet Name="Orgs" EntityType="CafeDataBaseModel.Org" />
+          <EntitySet Name="Products" EntityType="CafeDataBaseModel.Product" />
           <EntitySet Name="Users" EntityType="CafeDataBaseModel.User" />
           <EntitySet Name="WaitingUsers" EntityType="CafeDataBaseModel.WaitingUser" />
+          <AssociationSet Name="FK_Products_ToCategories" Association="CafeDataBaseModel.FK_Products_ToCategories">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drink_ToDrinkType" Association="CafeDataBaseModel.FK_Drink_ToDrinkType">
+            <End Role="DrinkType" EntitySet="DrinkTypes" />
+            <End Role="Drink" EntitySet="Drinks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Food_ToFoodType" Association="CafeDataBaseModel.FK_Food_ToFoodType">
+            <End Role="FoodType" EntitySet="FoodTypes" />
+            <End Role="Food" EntitySet="Foods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Menus_ToOrgFk" Association="CafeDataBaseModel.FK_Menus_ToOrgFk">
+            <End Role="Org" EntitySet="Orgs" />
+            <End Role="Menu" EntitySet="Menus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_ToMenus" Association="CafeDataBaseModel.FK_Products_ToMenus">
+            <End Role="Menu" EntitySet="Menus" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
           <AssociationSet Name="FK_Users_ToOrgs" Association="CafeDataBaseModel.FK_Users_ToOrgs">
             <End Role="Org" EntitySet="Orgs" />
             <End Role="User" EntitySet="Users" />
@@ -95,6 +263,56 @@
             <End Role="WaitingUser" EntitySet="WaitingUsers" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Boolean" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Products" Relationship="CafeDataBaseModel.FK_Products_ToCategories" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Drink">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DrinkTypeFk" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DrinkType" Relationship="CafeDataBaseModel.FK_Drink_ToDrinkType" FromRole="Drink" ToRole="DrinkType" />
+        </EntityType>
+        <EntityType Name="DrinkType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DrinkDesc" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Drinks" Relationship="CafeDataBaseModel.FK_Drink_ToDrinkType" FromRole="DrinkType" ToRole="Drink" />
+        </EntityType>
+        <EntityType Name="Food">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FoodTypeFk" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FoodType" Relationship="CafeDataBaseModel.FK_Food_ToFoodType" FromRole="Food" ToRole="FoodType" />
+        </EntityType>
+        <EntityType Name="FoodType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FoodDesc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Foods" Relationship="CafeDataBaseModel.FK_Food_ToFoodType" FromRole="FoodType" ToRole="Food" />
+        </EntityType>
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="OrgFk" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Org" Relationship="CafeDataBaseModel.FK_Menus_ToOrgFk" FromRole="Menu" ToRole="Org" />
+          <NavigationProperty Name="Products" Relationship="CafeDataBaseModel.FK_Products_ToMenus" FromRole="Menu" ToRole="Product" />
+        </EntityType>
         <EntityType Name="Org">
           <Key>
             <PropertyRef Name="Id" />
@@ -104,8 +322,22 @@
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="ChangedAt" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Menus" Relationship="CafeDataBaseModel.FK_Menus_ToOrgFk" FromRole="Org" ToRole="Menu" />
           <NavigationProperty Name="Users" Relationship="CafeDataBaseModel.FK_Users_ToOrgs" FromRole="Org" ToRole="User" />
           <NavigationProperty Name="WaitingUsers" Relationship="CafeDataBaseModel.FK_WaitingUsers_ToOrgs" FromRole="Org" ToRole="WaitingUser" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="CategoryFk" Type="Boolean" Nullable="false" />
+          <Property Name="ImgName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MenuFk" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="CafeDataBaseModel.FK_Products_ToCategories" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="Menu" Relationship="CafeDataBaseModel.FK_Products_ToMenus" FromRole="Product" ToRole="Menu" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -135,6 +367,66 @@
           <Property Name="OrgFk" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Org" Relationship="CafeDataBaseModel.FK_WaitingUsers_ToOrgs" FromRole="WaitingUser" ToRole="Org" />
         </EntityType>
+        <Association Name="FK_Products_ToCategories">
+          <End Type="CafeDataBaseModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Drink_ToDrinkType">
+          <End Type="CafeDataBaseModel.DrinkType" Role="DrinkType" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.Drink" Role="Drink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DrinkType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Drink">
+              <PropertyRef Name="DrinkTypeFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Food_ToFoodType">
+          <End Type="CafeDataBaseModel.FoodType" Role="FoodType" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.Food" Role="Food" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FoodType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Food">
+              <PropertyRef Name="FoodTypeFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Menus_ToOrgFk">
+          <End Type="CafeDataBaseModel.Org" Role="Org" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.Menu" Role="Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Org">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="OrgFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_ToMenus">
+          <End Type="CafeDataBaseModel.Menu" Role="Menu" Multiplicity="1" />
+          <End Type="CafeDataBaseModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Menu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="MenuFk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_ToOrgs">
           <End Type="CafeDataBaseModel.Org" Role="Org" Multiplicity="1" />
           <End Type="CafeDataBaseModel.User" Role="User" Multiplicity="*" />
@@ -165,6 +457,55 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="CafeDataBaseModelStoreContainer" CdmEntityContainer="CafeDataBaseEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Drinks">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.Drink">
+              <MappingFragment StoreEntitySet="Drink">
+                <ScalarProperty Name="DrinkTypeFk" ColumnName="DrinkTypeFk" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DrinkTypes">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.DrinkType">
+              <MappingFragment StoreEntitySet="DrinkType">
+                <ScalarProperty Name="DrinkDesc" ColumnName="DrinkDesc" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Foods">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.Food">
+              <MappingFragment StoreEntitySet="Food">
+                <ScalarProperty Name="FoodTypeFk" ColumnName="FoodTypeFk" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FoodTypes">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.FoodType">
+              <MappingFragment StoreEntitySet="FoodType">
+                <ScalarProperty Name="FoodDesc" ColumnName="FoodDesc" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Menus">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.Menu">
+              <MappingFragment StoreEntitySet="Menus">
+                <ScalarProperty Name="OrgFk" ColumnName="OrgFk" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Orgs">
             <EntityTypeMapping TypeName="CafeDataBaseModel.Org">
               <MappingFragment StoreEntitySet="Orgs">
@@ -172,6 +513,18 @@
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="OrgName" ColumnName="OrgName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="CafeDataBaseModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="MenuFk" ColumnName="MenuFk" />
+                <ScalarProperty Name="ImgName" ColumnName="ImgName" />
+                <ScalarProperty Name="CategoryFk" ColumnName="CategoryFk" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

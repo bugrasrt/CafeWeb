@@ -255,14 +255,14 @@ var app = new Vue({
                 window.history.replaceState(null, null, window.location.href);
             }
         },
-        setState: function (showOrg, showPers, save, edit, del, waiting, isPostBack) {
-            sessionStorage.setItem('showOrg', showOrg);
-            sessionStorage.setItem('showPers', showPers);
-            sessionStorage.setItem('save', save);
-            sessionStorage.setItem('edit', edit);
-            sessionStorage.setItem('del', del);
-            sessionStorage.setItem('onay', waiting);
-            sessionStorage.setItem('isPostBack', isPostBack);
+        setState: function () {
+            sessionStorage.setItem('showOrg', this.showOrg);
+            sessionStorage.setItem('showPers', this.showPers);
+            sessionStorage.setItem('save', this.save);
+            sessionStorage.setItem('edit', this.edit);
+            sessionStorage.setItem('del', this.del);
+            sessionStorage.setItem('onay', this.waiting);
+            sessionStorage.setItem('isPostBack', this.isPostBack);
             
         },
         getState: function () {
@@ -294,9 +294,10 @@ var app = new Vue({
                     }
                     else if ((!this.save && this.edit) && !this.waiting) {
                         if (this.del) {
-                            document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
-                            this.del = false;
+                            //document.getElementById('aspHidden').value = sessionStorage.getItem('delId');
                             SweetPopup('del');
+                            this.del = false;
+                            sessionStorage.setItem('del', this.del);
                         }
                         else {
                             SweetPopup('edit');
@@ -304,6 +305,12 @@ var app = new Vue({
                     }
                     else if ((!this.save && !this.edit) && (!this.del && this.waiting)) {
                         SweetPopup('onay');
+                    }
+
+                    else if ((!this.save && !this.edit) && (this.del && this.waiting)) {
+                        SweetPopup('del');
+                        this.del = false;
+                        sessionStorage.setItem('del', this.del);
                     }
 
                     this.isPostBack = false;

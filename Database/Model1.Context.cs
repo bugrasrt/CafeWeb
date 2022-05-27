@@ -25,7 +25,14 @@ namespace Database
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Drink> Drinks { get; set; }
+        public virtual DbSet<DrinkType> DrinkTypes { get; set; }
+        public virtual DbSet<Food> Foods { get; set; }
+        public virtual DbSet<FoodType> FoodTypes { get; set; }
+        public virtual DbSet<Menu> Menus { get; set; }
         public virtual DbSet<Org> Orgs { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<WaitingUser> WaitingUsers { get; set; }
     }
